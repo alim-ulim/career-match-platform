@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { IMG_BASE } from '../api';
-import { AvatarFallback, BuildingIcon, StarIcon, CheckCircleIcon } from './Icons';
+import { AvatarFallback, BuildingIcon, CheckCircleIcon } from './Icons';
 
 export default function DetailModal({ item, onClose, onSend, onEvaluate, consultations }) {
   const { user } = useAuth();

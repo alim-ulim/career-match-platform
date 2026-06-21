@@ -5,7 +5,7 @@ import DetailModal from '../components/DetailModal';
 import { useToast } from '../hooks/useToast';
 import Toast from '../components/Toast';
 import { useAuth } from '../hooks/useAuth';
-import { AvatarFallback, HandshakeIcon, UserBadgeIcon, ReportIcon, GrowthIcon } from '../components/Icons';
+import { AvatarFallback, HandshakeIcon, UserBadgeIcon, GrowthIcon } from '../components/Icons';
 
 const HOW_TO = {
   runner: {

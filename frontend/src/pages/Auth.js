@@ -11,7 +11,6 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [needsVerify, setNeedsVerify] = useState(false);
   const [resendSent, setResendSent] = useState(false);
-  const { api: apiModule } = { api: null };
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
@@ -77,7 +76,6 @@ export function Login() {
 }
 
 export function Register() {
-  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: '', password: '', passwordConfirm: '',
     name: '', role: 'seeker', field: '', description: '',
