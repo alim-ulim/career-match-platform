@@ -131,17 +131,10 @@ export function Register() {
             <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>
           </svg>
         </div>
-        <h2 style={{ marginBottom: 8 }}>가입 신청 완료!</h2>
-        <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 8 }}>
-          <strong>{form.email}</strong>으로<br />
-          이메일 인증 링크를 발송했습니다.
-        </p>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 24 }}>
-          받은 편지함을 확인하여 인증을 완료하면<br />
-          ProPath 서비스를 이용할 수 있습니다.
-        </p>
-        <p style={{ fontSize: '0.8rem', color: '#bbb', marginBottom: 16 }}>
-          메일이 오지 않으면 스팸 폴더를 확인해 주세요.
+        <h2 style={{ marginBottom: 8 }}>가입 완료!</h2>
+        <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
+          <strong>{form.name}</strong>님, ProPath에 오신 것을 환영합니다.<br />
+          지금 바로 로그인하여 서비스를 이용해 보세요.
         </p>
         <Link to="/login" className="btn-outline w-full" style={{ display: 'block', textAlign: 'center' }}>
           로그인 페이지로
@@ -254,10 +247,6 @@ export function Register() {
               <div className="form-group">
                 <label>한줄 소개</label>
                 <textarea className="form-input form-textarea" placeholder="자신의 전문성과 경험을 간략히 소개해 주세요." value={form.description} onChange={set('description')} />
-              </div>
-              <div className="form-group">
-                <label>프로필 사진 (선택)</label>
-                <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} />
               </div>
               {error && <p className="form-error">{error}</p>}
               <div className="row-gap mt-16">

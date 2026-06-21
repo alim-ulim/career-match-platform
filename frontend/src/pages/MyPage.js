@@ -115,10 +115,7 @@ export default function MyPage() {
         {/* 프로필 카드 */}
         <div className="profile-card">
           <div className="profile-avatar">
-            {user.profileImage
-              ? <img src={`${IMG_BASE}${user.profileImage}`} alt="profile" />
-              : <AvatarFallback name={user.name} size={80} />
-            }
+            <AvatarFallback name={user.name} size={80} />
           </div>
           <div className="profile-info">
             <h2>{user.name}</h2>
@@ -175,18 +172,12 @@ export default function MyPage() {
               <label>새 비밀번호 (변경 시만 입력)</label>
               <input className="form-input" type="password" value={editForm.password} onChange={e => setEditForm(f => ({ ...f, password: e.target.value }))} />
             </div>
-            <div className="form-row">
+            {user.role === 'seeker' && (
               <div className="form-group">
-                <label>프로필 사진 변경</label>
-                <input type="file" accept="image/*" onChange={e => setProfileFile(e.target.files[0])} />
+                <label>이력서 업로드 (PDF/Word)</label>
+                <input type="file" accept=".pdf,.doc,.docx" onChange={e => setResumeFile(e.target.files[0])} />
               </div>
-              {user.role === 'seeker' && (
-                <div className="form-group">
-                  <label>이력서 업로드 (PDF/Word)</label>
-                  <input type="file" accept=".pdf,.doc,.docx" onChange={e => setResumeFile(e.target.files[0])} />
-                </div>
-              )}
-            </div>
+            )}
             <div className="row-gap mt-16">
               <button className="btn-outline flex-1" onClick={() => setIsEditing(false)}>취소</button>
               <button className="btn-primary flex-2" onClick={handleSave}>저장하기</button>
