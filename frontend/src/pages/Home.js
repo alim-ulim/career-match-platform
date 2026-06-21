@@ -207,10 +207,7 @@ export default function Home() {
             {guides.slice(0, 4).map(item => (
               <div key={item._id} className="guide-card" onClick={() => setSelectedItem(item)}>
                 <div className="guide-card-avatar">
-                  {item.profileImage
-                    ? <img src={`${IMG_BASE}${item.profileImage}`} alt={item.name} />
-                    : <AvatarFallback name={item.name} size={80} />
-                  }
+                  <AvatarFallback name={item.name} size={80} />
                 </div>
                 <div className="guide-card-info">
                   <h4>{item.name}</h4>

@@ -120,10 +120,7 @@ export default function UserList() {
             {filtered.map(item => (
               <div key={item._id} className="person-card-lg" onClick={() => setSelected(item)}>
                 <div className="person-avatar-lg">
-                  {item.profileImage
-                    ? <img src={`${IMG_BASE}${item.profileImage}`} alt={item.name} />
-                    : <AvatarFallback name={item.name} size={88} />
-                  }
+                  <AvatarFallback name={item.name} size={88} />
                 </div>
                 <div className="person-info-lg">
                   <div className="person-header">

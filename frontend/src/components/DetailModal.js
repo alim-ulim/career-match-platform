@@ -43,10 +43,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, consult
           <>
             <div className="modal-header">
               <div className="modal-avatar">
-                {!isConsultation && item.profileImage
-                  ? <img src={`${IMG_BASE}${item.profileImage}`} alt="profile" />
-                  : <AvatarFallback name={item.name || item.senderName} size={72} />
-                }
+                <AvatarFallback name={item.name || item.senderName} size={72} />
               </div>
               <h2 className="modal-name">{item.name || item.senderName}</h2>
               <p className="modal-role">{roleLabel()}</p>
