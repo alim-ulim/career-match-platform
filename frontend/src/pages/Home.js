@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { api, IMG_BASE } from '../api';
+import { api } from '../api';
 import DetailModal from '../components/DetailModal';
 import { useToast } from '../hooks/useToast';
 import Toast from '../components/Toast';

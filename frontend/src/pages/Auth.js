@@ -81,7 +81,6 @@ export function Register() {
     name: '', role: 'seeker', field: '', description: '',
     phone: '', companyName: '', yearsOfExperience: '', currentCompany: '',
   });
-  const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -98,7 +97,6 @@ export function Register() {
 
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => { if (k !== 'passwordConfirm') fd.append(k, v); });
-    if (file) fd.append('profileImage', file);
 
     const data = await api.register(fd);
     setLoading(false);

@@ -17,7 +17,6 @@ export default function MyPage() {
   const [acceptingId, setAcceptingId] = useState(null);
   const [selected, setSelected] = useState(null);
   const [editForm, setEditForm] = useState({});
-  const [profileFile, setProfileFile] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
 
   useEffect(() => {
@@ -64,7 +63,6 @@ export default function MyPage() {
   const handleSave = async () => {
     const fd = new FormData();
     Object.entries(editForm).forEach(([k, v]) => { if (v) fd.append(k, v); });
-    if (profileFile) fd.append('profileImage', profileFile);
     if (resumeFile) fd.append('resume', resumeFile);
     const data = await api.updateUser(user._id, fd);
     if (data.success) {
