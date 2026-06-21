@@ -1,0 +1,44 @@
+[
+  {
+    "_id": "6959334d5e2291b45a73e275",
+    "senderName": "Applicant Lee",
+    "message": "Career advice please",
+    "expertName": "Expert Kim",
+    "expertId": "695932fb5e2291b45a73e267",
+    "senderId": "695932fc5e2291b45a73e269",
+    "status": "requested",
+    "createdAt": "2026-01-03T15:18:37.363Z",
+    "__v": 0
+  },
+  {
+    "_id": "6959332e5e2291b45a73e273",
+    "senderName": "Applicant Lee",
+    "message": "Career advice please",
+    "expertName": "Expert Kim",
+    "expertId": "695932fb5e2291b45a73e267",
+    "senderId": "695932fc5e2291b45a73e269",
+    "status": "requested",
+    "createdAt": "2026-01-03T15:18:06.589Z",
+    "__v": 0
+  },
+  {
+    "status": "requested",
+    "_id": "6951e7a9d656a41150cda310",
+    "message": "ㅇ",
+    "expertName": "김호덕",
+    "expertId": "694a457e3f560deb091c58fe",
+    "date": "2025-12-29T02:30:01.257Z",
+    "__v": 0,
+    "createdAt": "2026-01-03T15:18:44.759Z"
+  },
+  {
+    "status": "requested",
+    "_id": "6951e834d656a41150cda314",
+    "message": "ㅇㅇㅇㅇ",
+    "expertName": "김동우",
+    "expertId": "694a44f93f560deb091c58e6",
+    "date": "2025-12-29T02:32:20.666Z",
+    "__v": 0,
+    "createdAt": "2026-01-03T15:18:44.759Z"
+  }
+]

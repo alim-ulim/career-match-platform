@@ -70,7 +70,8 @@ const UserSchema = new mongoose.Schema({
   paymentMethod: { type: String, enum: ['lump-sum', 'subscription', 'none'], default: 'none' },
   emailVerified: { type: Boolean, default: false },
   emailVerifyToken: { type: String, default: '' },
-  emailVerifyExpires: { type: Date }
+  emailVerifyExpires: { type: Date },
+  gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' }
 });
 
 const ConsultationSchema = new mongoose.Schema({
@@ -82,7 +83,7 @@ const ConsultationSchema = new mongoose.Schema({
   expertExp: Number,
   message: String,
   consultationType: { type: String, default: '취업준비' },
-  status: { type: String, enum: ['requested', 'accepted', 'completed'], default: 'requested' },
+  status: { type: String, enum: ['requested', 'accepted', 'rejected', 'completed'], default: 'requested' },
   createdAt: { type: Date, default: Date.now },
   evaluation: {
     rating: Number,
@@ -591,6 +592,41 @@ app.patch('/api/consultations/:id/accept', async (req, res) => {
     res.status(500).json({ success: false, error: "승인 처리 실패" });
   }
 });
+
+// 컨설팅 거절
+app.patch('/api/consultations/:id/reject', async (req, res) => {
+  try {
+    const consultation = await Consultation.findByIdAndUpdate(
+      req.params.id, { status: 'rejected' }, { new: true }
+    );
+    if (!consultation) return res.status(404).json({ success: false, error: "상담을 찾을 수 없습니다." });
+    res.json({ success: true, consultation });
+  } catch (err) {
+    res.status(500).json({ success: false, error: "거절 처리 실패" });
+  }
+});
+
+// 공개 매칭 현황 (개인정보 제외)
+app.get('/api/consultations/public', async (req, res) => {
+  try {
+    const list = await Consultation.find({ status: { $in: ['accepted', 'completed'] } })
+      .sort({ createdAt: -1 }).limit(20);
+    const masked = list.map(c => ({
+      _id: c._id,
+      senderName: maskName(c.senderName),
+      expertName: maskName(c.expertName),
+      expertField: c.expertCompany ? c.expertCompany.slice(0, 2) + '***' : '',
+      status: c.status,
+      createdAt: c.createdAt,
+    }));
+    res.json({ success: true, list: masked });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+function maskName(name) {
+  if (!name) return '***';
+  return name[0] + '*'.repeat(Math.max(name.length - 1, 1));
+}
 
 // 9. 평가 및 추천서 등록
 app.patch('/api/consultations/:id/evaluate', async (req, res) => {

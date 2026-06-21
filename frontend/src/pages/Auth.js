@@ -80,6 +80,7 @@ export function Register() {
     email: '', password: '', passwordConfirm: '',
     name: '', role: 'seeker', field: '', description: '',
     phone: '', companyName: '', yearsOfExperience: '', currentCompany: '',
+    gender: 'other',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -177,6 +178,17 @@ export function Register() {
                 <div className="form-group">
                   <label>비밀번호 확인 *</label>
                   <input className="form-input" type="password" value={form.passwordConfirm} onChange={set('passwordConfirm')} required />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>성별</label>
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  {[['male', '남성'], ['female', '여성'], ['other', '선택 안 함']].map(([v, l]) => (
+                    <label key={v} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+                      <input type="radio" name="gender" value={v} checked={form.gender === v} onChange={set('gender')} />
+                      {l}
+                    </label>
+                  ))}
                 </div>
               </div>
               <div className="form-group">

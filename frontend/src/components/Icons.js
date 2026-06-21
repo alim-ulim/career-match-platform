@@ -101,20 +101,42 @@ export const ReportIcon = ({ size = 40, color = '#00c7ae' }) => (
   </svg>
 );
 
-export function AvatarFallback({ name, size = 60 }) {
-  const initial = (name || 'U')[0].toUpperCase();
+export function AvatarFallback({ name, size = 60, gender = 'other' }) {
   const colors = ['#00c7ae', '#0891b2', '#7c3aed', '#db2777', '#ea580c', '#16a34a'];
   const colorIndex = (name?.charCodeAt(0) || 0) % colors.length;
+  const bg = colors[colorIndex];
+  const s = size;
+
+  const MaleIcon = () => (
+    <svg width={s * 0.58} height={s * 0.58} viewBox="0 0 24 24" fill="white">
+      <circle cx="12" cy="7" r="4.5" />
+      <path d="M3 21c0-4.418 4.03-8 9-8s9 3.582 9 8" />
+    </svg>
+  );
+
+  const FemaleIcon = () => (
+    <svg width={s * 0.58} height={s * 0.58} viewBox="0 0 24 24" fill="white">
+      <circle cx="12" cy="6.5" r="4" />
+      <path d="M4 21c0-4 3.582-7 8-7s8 3 8 7" />
+      <path d="M8 13.5c0 0 1 2 4 2s4-2 4-2" fill="none" stroke="white" strokeWidth="1.2"/>
+    </svg>
+  );
+
+  const OtherIcon = () => (
+    <svg width={s * 0.55} height={s * 0.55} viewBox="0 0 24 24" fill="white">
+      <circle cx="12" cy="7" r="4.5" />
+      <path d="M3 21c0-4.418 4.03-8 9-8s9 3.582 9 8" />
+    </svg>
+  );
+
   return (
     <div style={{
-      width: size, height: size, borderRadius: '50%',
-      background: colors[colorIndex],
+      width: s, height: s, borderRadius: '50%',
+      background: bg,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#fff', fontWeight: 700,
-      fontSize: size * 0.38,
-      flexShrink: 0,
+      flexShrink: 0, overflow: 'hidden',
     }}>
-      {initial}
+      {gender === 'female' ? <FemaleIcon /> : gender === 'male' ? <MaleIcon /> : <OtherIcon />}
     </div>
   );
 }

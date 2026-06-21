@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
-import { api, IMG_BASE } from '../api';
+import { api } from '../api';
 import Toast from '../components/Toast';
 import DetailModal from '../components/DetailModal';
 import { AvatarFallback, BuildingIcon, MailIcon, PhoneIcon, DocumentIcon, CheckCircleIcon, ClockIcon } from '../components/Icons';
@@ -50,6 +50,13 @@ export default function MyPage() {
     const updated = await api.getConsultations();
     setConsultations(Array.isArray(updated) ? updated : []);
     setAcceptingId(null);
+  };
+
+  const handleReject = async (id) => {
+    await api.rejectConsultation(id);
+    showToast('컨설팅 요청을 거절했습니다.');
+    const updated = await api.getConsultations();
+    setConsultations(Array.isArray(updated) ? updated : []);
   };
 
   const handleEvaluate = async (id, evalData) => {
@@ -106,6 +113,8 @@ export default function MyPage() {
         onClose={() => setSelected(null)}
         onSend={() => {}}
         onEvaluate={handleEvaluate}
+        onAccept={handleAccept}
+        onReject={handleReject}
         consultations={consultations}
       />
 
@@ -185,7 +194,7 @@ export default function MyPage() {
 
         {/* 이력서 다운로드 */}
         {user.resume && (
-          <a href={`${IMG_BASE}${user.resume}`} target="_blank" rel="noreferrer" className="resume-link">
+          <a href={`${process.env.REACT_APP_API_URL?.replace('/api','') || 'http://localhost:5000'}${user.resume}`} target="_blank" rel="noreferrer" className="resume-link">
             <DocumentIcon size={14} color="#00c7ae" />&nbsp;이력서 다운로드
           </a>
         )}

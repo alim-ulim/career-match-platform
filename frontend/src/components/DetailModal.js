@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { AvatarFallback, BuildingIcon, CheckCircleIcon } from './Icons';
 
-export default function DetailModal({ item, onClose, onSend, onEvaluate, consultations }) {
+export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccept, onReject, consultations }) {
   const { user } = useAuth();
   const [step, setStep] = useState('profile');
   const [sender, setSender] = useState('');
@@ -42,7 +42,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, consult
           <>
             <div className="modal-header">
               <div className="modal-avatar">
-                <AvatarFallback name={item.name || item.senderName} size={72} />
+                <AvatarFallback name={item.name || item.senderName} size={72} gender={item.gender} />
               </div>
               <h2 className="modal-name">{item.name || item.senderName}</h2>
               <p className="modal-role">{roleLabel()}</p>
@@ -94,8 +94,20 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, consult
                 </div>
               )}
 
+              {/* 가이드: 요청 수락/거절 */}
+              {isConsultation && user?.role === 'expert' && item.status === 'requested' && (
+                <div className="row-gap mt-16">
+                  <button className="btn-outline flex-1" style={{ color: '#dc2626', borderColor: '#dc2626' }} onClick={() => { onReject && onReject(item._id); onClose(); }}>
+                    거절
+                  </button>
+                  <button className="btn-primary flex-2" onClick={() => { onAccept && onAccept(item._id); onClose(); }}>
+                    수락
+                  </button>
+                </div>
+              )}
+
               {/* 커리어 가이드: 리포트 작성 폼 */}
-              {isConsultation && user?.role === 'expert' && !item.evaluation && (
+              {isConsultation && user?.role === 'expert' && item.status === 'accepted' && !item.evaluation && (
                 <div className="eval-form">
                   <h4 className="section-label">커리어 리포트 작성</h4>
                   <select

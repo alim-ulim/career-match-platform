@@ -25,6 +25,7 @@ export default function Navbar() {
       <div className="navbar-menu">
         <Link to="/guides" className="nav-link">커리어 가이드 찾기</Link>
         <Link to="/runners" className="nav-link">커리어 러너 찾기</Link>
+        <Link to="/matching" className="nav-link">매칭 현황</Link>
         {user ? (
           <>
             <Link to="/mypage" className="nav-link">마이페이지</Link>
@@ -50,6 +51,7 @@ export default function Navbar() {
         <div className="mobile-menu">
           <Link to="/guides" className="mobile-link" onClick={close}>커리어 가이드 찾기</Link>
           <Link to="/runners" className="mobile-link" onClick={close}>커리어 러너 찾기</Link>
+          <Link to="/matching" className="mobile-link" onClick={close}>매칭 현황</Link>
           {user ? (
             <>
               <Link to="/mypage" className="mobile-link" onClick={close}>마이페이지</Link>

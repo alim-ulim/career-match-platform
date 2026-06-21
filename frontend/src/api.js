@@ -34,8 +34,10 @@ export const api = {
 
   // Consultations
   getConsultations: () => req('GET', '/consultations'),
+  getPublicMatches: () => req('GET', '/consultations/public'),
   createConsultation: (data) => req('POST', '/consultations', data),
   acceptConsultation: (id) => req('PATCH', `/consultations/${id}/accept`),
+  rejectConsultation: (id) => req('PATCH', `/consultations/${id}/reject`),
   evaluateConsultation: (id, data) => req('PATCH', `/consultations/${id}/evaluate`, data),
 
   // Stats

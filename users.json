@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "695931e2e427b88aba745ce1",
+    "email": "m@m.com",
+    "password": "$2b$10$.6qsyQ0uqUrVsoai8NcDJuLAxToaZr1CgZgWZxJXG1I/K9SdFM6fi",
+    "role": "seeker",
+    "profileImage": "",
+    "date": "2026-01-03T15:12:34.377Z",
+    "__v": 0
+  },
+  {
+    "_id": "695932fc5e2291b45a73e269",
+    "email": "applicant_curl@test.com",
+    "password": "$2b$10$QSbu/hVJ7O9TDHudPXFefub5f.mlmbmNr5yOiRm.o90946zlC8nZC",
+    "name": "Applicant Lee",
+    "role": "seeker",
+    "field": "IT",
+    "description": "Applicant Description",
+    "profileImage": "",
+    "date": "2026-01-03T15:17:16.203Z",
+    "__v": 0
+  },
+  {
+    "email": "test_jwt@alimulim.com",
+    "password": "$2b$10$fxkyd1e04DFAo3ejRjUA0OxupURR9oUurJ/YGpMKO0/HuG2tQh.dC",
+    "name": "테스트유저",
+    "role": "seeker",
+    "field": "IT",
+    "yearsOfExperience": 0,
+    "currentCompany": "",
+    "languages": [
+      "ko"
+    ],
+    "nationality": "KR",
+    "companyName": "",
+    "companySize": 1,
+    "planType": "none",
+    "paymentMethod": "none",
+    "profileImage": "",
+    "_id": "6a37705a1c5f680a8611ac2e"
+  },
+  {
+    "email": "faithor486@gmail.com",
+    "password": "$2b$10$jCk/DXeFKcaR/PNDOCE0YeZtyO/3aHLeXnIwYZOLool0/POzPa4My",
+    "name": "테스트유저",
+    "role": "seeker",
+    "yearsOfExperience": 0,
+    "currentCompany": "",
+    "languages": [
+      "ko"
+    ],
+    "nationality": "KR",
+    "companyName": "",
+    "companySize": 1,
+    "planType": "none",
+    "paymentMethod": "none",
+    "profileImage": "",
+    "_id": "6a377df4312119e02b039a4d",
+    "emailVerifyToken": "e2bbfa086c03ab47be6be62fc0df36b35c184aef959b4bc4a3c9db5df0d21222",
+    "emailVerifyExpires": "2026-06-22T06:00:20.473Z"
+  }
+]

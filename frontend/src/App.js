@@ -10,6 +10,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Admin from './pages/Admin';
+import MatchingStatus from './pages/MatchingStatus';
 import Footer from './components/Footer';
 import './index.css';
 
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/matching" element={<MatchingStatus />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

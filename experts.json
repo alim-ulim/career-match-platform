@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "695932fb5e2291b45a73e267",
+    "email": "expert_curl@test.com",
+    "password": "$2b$10$iDN0Tf9bP4VJEygV7p8jFeaUIeRPdMjZ6/c47NyrtOJqFxVPJy076",
+    "name": "Expert Kim",
+    "role": "expert",
+    "field": "IT",
+    "description": "Expert Description",
+    "profileImage": "",
+    "date": "2026-01-03T15:17:15.992Z",
+    "__v": 0
+  },
+  {
+    "email": "faithor@naver.com",
+    "password": "$2b$10$/fa/yVCDJt/OkG2PehiJr.VYQ9azjXv25dxaucQoqNVOmxvAgWLEG",
+    "name": "김호덕",
+    "role": "expert",
+    "field": "경영지원, 스타트업 지원, 사업기획 및 운영, 정부과제 기획 및 관리, 총무 등 ",
+    "description": "커리어의 방향성을 고민하는 모든 분들께 작지만 도움이 되기를 희망합니다. ",
+    "phone": "010-7477-1486",
+    "yearsOfExperience": 20,
+    "currentCompany": "어썸레이 주식회사",
+    "languages": [
+      "ko"
+    ],
+    "nationality": "KR",
+    "companyName": "",
+    "companySize": 1,
+    "planType": "none",
+    "paymentMethod": "none",
+    "profileImage": "/uploads/1782020181592-IMG_1612.jpeg",
+    "_id": "6a377855b46e0f8881ad0523"
+  }
+]
