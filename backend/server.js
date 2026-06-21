@@ -32,12 +32,8 @@ async function sendEmail(to, subject, html) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const ALLOWED_ORIGINS = ['http://localhost:3000', process.env.FRONTEND_URL].filter(Boolean);
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || ALLOWED_ORIGINS.some(o => origin.startsWith(o))) return cb(null, true);
-    cb(new Error('CORS 차단: ' + origin));
-  },
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
