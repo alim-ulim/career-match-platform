@@ -381,6 +381,100 @@ input, textarea, select { font-family: inherit; }
   display: flex; align-items: center; gap: 2px;
 }
 
+/* === 플랫폼 구조 (에코시스템) 섹션 === */
+.ecosystem-section { padding: 80px 5%; background: #fff; }
+
+.ecosystem-flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+  max-width: 860px; margin: 0 auto 56px;
+}
+.eco-node {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px 20px; border-radius: 16px;
+  min-width: 140px; text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.eco-node:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.eco-runner { background: #e6fffa; border-color: #00c7ae; }
+.eco-guide  { background: #e0f7fa; border-color: #0891b2; }
+.eco-company { background: #f3e8ff; border-color: #7c3aed; }
+.eco-node-icon { font-size: 2.2rem; margin-bottom: 8px; }
+.eco-node-label { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; }
+.eco-node-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+.eco-arrow-block {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 0 12px; flex-shrink: 0;
+}
+.eco-arrow-line {
+  display: flex; align-items: center;
+  white-space: nowrap;
+}
+.eco-arrow-line.reverse { justify-content: flex-end; }
+.eco-arrow-tag {
+  font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
+  background: #f8f9fa; border: 1px solid var(--border);
+  border-radius: 12px; padding: 3px 10px;
+}
+
+/* 역할별 장점 카드 */
+.benefit-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; max-width: 1060px; margin: 0 auto 56px;
+}
+.benefit-card {
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.benefit-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.benefit-card-header { margin-bottom: 20px; }
+.benefit-badge {
+  display: inline-block;
+  color: #fff; font-size: 0.72rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
+}
+.benefit-card-header h3 { font-size: 1rem; font-weight: 800; }
+.benefit-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.benefit-list li { display: flex; gap: 10px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+.benefit-check { color: var(--primary); font-weight: 700; flex-shrink: 0; }
+
+/* 핵심 차별점 스트립 */
+.diff-strip {
+  display: flex; align-items: flex-start;
+  background: #0f2027; border-radius: 16px;
+  padding: 36px 40px; max-width: 1060px; margin: 0 auto;
+  gap: 0; flex-wrap: wrap;
+}
+.diff-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  flex: 1; min-width: 200px; padding: 8px 20px;
+}
+.diff-num {
+  font-size: 1.8rem; font-weight: 900; color: var(--primary);
+  line-height: 1; flex-shrink: 0;
+}
+.diff-item strong { display: block; color: #fff; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+.diff-item p { color: rgba(255,255,255,0.6); font-size: 0.82rem; line-height: 1.6; }
+.diff-divider { width: 1px; background: rgba(255,255,255,0.12); align-self: stretch; flex-shrink: 0; }
+
+@media (max-width: 900px) {
+  .benefit-grid { grid-template-columns: 1fr; }
+  .ecosystem-flow { gap: 12px; }
+  .eco-arrow-block { padding: 4px 0; flex-direction: row; }
+  .diff-strip { flex-direction: column; padding: 28px 24px; }
+  .diff-divider { width: 100%; height: 1px; }
+  .diff-item { padding: 12px 0; }
+}
+@media (max-width: 640px) {
+  .ecosystem-flow { flex-direction: column; }
+  .eco-arrow-block { flex-direction: column; align-items: center; }
+}
+
 /* === How it works 섹션 (역할별 탭) === */
 .steps-section { padding: 60px 5%; background: var(--bg-gray); }
 .role-tabs {

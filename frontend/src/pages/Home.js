@@ -162,6 +162,116 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 플랫폼 구조 */}
+      <section className="ecosystem-section">
+        <div className="section-header">
+          <h2>ProPath 플랫폼 구조</h2>
+          <p>세 참여자가 서로 연결되어 가치를 나누는 신뢰 기반 에코시스템</p>
+        </div>
+
+        {/* 관계 흐름도 */}
+        <div className="ecosystem-flow">
+          <div className="eco-node eco-runner">
+            <div className="eco-node-icon">🏃</div>
+            <div className="eco-node-label">커리어 러너</div>
+            <div className="eco-node-sub">커리어 방향을 찾는 인재</div>
+          </div>
+          <div className="eco-arrow-block">
+            <div className="eco-arrow-line">
+              <span className="eco-arrow-tag">컨설팅 신청 →</span>
+            </div>
+            <div className="eco-arrow-line reverse">
+              <span className="eco-arrow-tag">← 커리어 리포트 수령</span>
+            </div>
+          </div>
+          <div className="eco-node eco-guide">
+            <div className="eco-node-icon">🎯</div>
+            <div className="eco-node-label">커리어 가이드</div>
+            <div className="eco-node-sub">10년+ 현직 전문가</div>
+          </div>
+          <div className="eco-arrow-block">
+            <div className="eco-arrow-line">
+              <span className="eco-arrow-tag">인재 추천 →</span>
+            </div>
+            <div className="eco-arrow-line reverse">
+              <span className="eco-arrow-tag">← 파트너십</span>
+            </div>
+          </div>
+          <div className="eco-node eco-company">
+            <div className="eco-node-icon">🏢</div>
+            <div className="eco-node-label">파트너 기업</div>
+            <div className="eco-node-sub">검증된 인재를 채용</div>
+          </div>
+        </div>
+
+        {/* 역할별 장점 카드 */}
+        <div className="benefit-grid">
+          <div className="benefit-card benefit-runner">
+            <div className="benefit-card-header">
+              <span className="benefit-badge" style={{ background: '#00c7ae' }}>커리어 러너</span>
+              <h3>내 커리어의 방향을 찾다</h3>
+            </div>
+            <ul className="benefit-list">
+              <li><span className="benefit-check">✓</span>10년+ 현직 가이드의 맞춤형 1:1 조언</li>
+              <li><span className="benefit-check">✓</span>나만의 커리어 리포트로 강점·방향 정립</li>
+              <li><span className="benefit-check">✓</span>원할 때만 파트너 기업 추천 신청 — 강요 없음</li>
+              <li><span className="benefit-check">✓</span>채용 공고 지원이 아닌, 기업이 먼저 제안하는 경험</li>
+            </ul>
+          </div>
+          <div className="benefit-card benefit-guide">
+            <div className="benefit-card-header">
+              <span className="benefit-badge" style={{ background: '#0891b2' }}>커리어 가이드</span>
+              <h3>전문성을 사회에 환원하다</h3>
+            </div>
+            <ul className="benefit-list">
+              <li><span className="benefit-check">✓</span>현직 경험을 활용해 후배를 실질적으로 돕는 기회</li>
+              <li><span className="benefit-check">✓</span>커리어 리포트 작성으로 전문가 브랜드 강화</li>
+              <li><span className="benefit-check">✓</span>파트너 기업과의 네트워크 자연스럽게 확장</li>
+              <li><span className="benefit-check">✓</span>수락/거절 결정권은 가이드에게 — 부담 없는 참여</li>
+            </ul>
+          </div>
+          <div className="benefit-card benefit-company">
+            <div className="benefit-card-header">
+              <span className="benefit-badge" style={{ background: '#7c3aed' }}>파트너 기업</span>
+              <h3>검증된 인재와 연결되다</h3>
+            </div>
+            <ul className="benefit-list">
+              <li><span className="benefit-check">✓</span>커리어 가이드가 검증·추천한 인재만 열람</li>
+              <li><span className="benefit-check">✓</span>커리어 리포트로 지원서보다 깊은 인재 이해</li>
+              <li><span className="benefit-check">✓</span>채용 공고 없이도 적합 인재에게 직접 제안</li>
+              <li><span className="benefit-check">✓</span>이직 의사가 있는 인재 위주 — 채용 효율 극대화</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* 핵심 차별점 */}
+        <div className="diff-strip">
+          <div className="diff-item">
+            <span className="diff-num">01</span>
+            <div>
+              <strong>가이드 검증 필터</strong>
+              <p>현직 전문가가 직접 평가·추천한 인재만 기업과 연결됩니다.</p>
+            </div>
+          </div>
+          <div className="diff-divider" />
+          <div className="diff-item">
+            <span className="diff-num">02</span>
+            <div>
+              <strong>리포트 기반 신뢰</strong>
+              <p>자기소개서 대신 커리어 리포트로 인재를 입체적으로 파악합니다.</p>
+            </div>
+          </div>
+          <div className="diff-divider" />
+          <div className="diff-item">
+            <span className="diff-num">03</span>
+            <div>
+              <strong>러너 주도권 보장</strong>
+              <p>기업 추천 신청은 러너가 직접 결정 — 원치 않으면 리포트만 받아도 됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 이용 방법 — 역할별 탭 */}
       <section className="steps-section">
         <div className="section-header">
