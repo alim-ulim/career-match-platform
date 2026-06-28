@@ -39,6 +39,9 @@ export const api = {
   acceptConsultation: (id) => req('PATCH', `/consultations/${id}/accept`),
   rejectConsultation: (id) => req('PATCH', `/consultations/${id}/reject`),
   evaluateConsultation: (id, data) => req('PATCH', `/consultations/${id}/evaluate`, data),
+  submitPreInterview: (id, data) => req('PATCH', `/consultations/${id}/pre-interview`, data),
+  scheduleConsultation: (id, data) => req('PATCH', `/consultations/${id}/schedule`, data),
+  submitReport: (id, data) => req('PATCH', `/consultations/${id}/report`, data),
 
   // Stats
   getStats: () => req('GET', '/main/stats'),

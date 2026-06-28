@@ -71,7 +71,12 @@ const UserSchema = new mongoose.Schema({
   emailVerified: { type: Boolean, default: false },
   emailVerifyToken: { type: String, default: '' },
   emailVerifyExpires: { type: Date },
-  gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' }
+  gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' },
+  // 커리어 가이드 상세 경력
+  careerHistory: { type: String, default: '' },
+  achievements: { type: String, default: '' },
+  consultationExpertise: { type: String, default: '' },
+  consultationStyle: { type: String, default: '' }
 });
 
 const ConsultationSchema = new mongoose.Schema({
@@ -85,6 +90,28 @@ const ConsultationSchema = new mongoose.Schema({
   consultationType: { type: String, default: '취업준비' },
   status: { type: String, enum: ['requested', 'accepted', 'rejected', 'completed'], default: 'requested' },
   createdAt: { type: Date, default: Date.now },
+  // 사전 인터뷰 (러너 작성)
+  preInterview: {
+    currentSituation: String,
+    concerns: String,
+    goals: String,
+    specificQuestions: String,
+    submittedAt: Date
+  },
+  // 컨설팅 일정
+  scheduledAt: Date,
+  scheduleNote: String,
+  // 커리어 리포트 (가이드 작성, 러너에게 공개)
+  report: {
+    direction: String,
+    strengths: String,
+    developments: String,
+    actionPlan: String,
+    isRecommended: { type: Boolean, default: false },
+    recommendedRoles: { type: [String], default: [] },
+    createdAt: Date
+  },
+  // legacy 평가 필드 (하위호환)
   evaluation: {
     rating: Number,
     pros: String,
@@ -293,7 +320,8 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
     const {
       email, password, name, role, field, description, phone,
       yearsOfExperience, currentCompany, languages, nationality,
-      companyName, companySize, planType, paymentMethod
+      companyName, companySize, planType, paymentMethod,
+      careerHistory, achievements, consultationExpertise, consultationStyle
     } = req.body;
 
     if (!email || !password || !name) {
@@ -316,7 +344,11 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
       companySize: Number(companySize) || 1,
       planType: planType || 'none',
       paymentMethod: paymentMethod || 'none',
-      profileImage: req.file ? `/uploads/${req.file.filename}` : ''
+      profileImage: req.file ? `/uploads/${req.file.filename}` : '',
+      careerHistory: careerHistory || '',
+      achievements: achievements || '',
+      consultationExpertise: consultationExpertise || '',
+      consultationStyle: consultationStyle || ''
     });
 
     // 이메일 인증 토큰 생성 (24시간 유효)
@@ -627,6 +659,63 @@ function maskName(name) {
   if (!name) return '***';
   return name[0] + '*'.repeat(Math.max(name.length - 1, 1));
 }
+
+// 사전 인터뷰 제출 (러너)
+app.patch('/api/consultations/:id/pre-interview', async (req, res) => {
+  try {
+    const { currentSituation, concerns, goals, specificQuestions } = req.body;
+    const consultation = await Consultation.findByIdAndUpdate(
+      req.params.id,
+      { preInterview: { currentSituation, concerns, goals, specificQuestions, submittedAt: new Date() } },
+      { new: true }
+    );
+    if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
+    res.json({ success: true, consultation });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 컨설팅 일정 설정 (가이드)
+app.patch('/api/consultations/:id/schedule', async (req, res) => {
+  try {
+    const { scheduledAt, scheduleNote } = req.body;
+    const consultation = await Consultation.findByIdAndUpdate(
+      req.params.id,
+      { scheduledAt: new Date(scheduledAt), scheduleNote: scheduleNote || '' },
+      { new: true }
+    );
+    if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
+    res.json({ success: true, consultation });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 커리어 리포트 작성 (가이드 → 러너 공개)
+app.patch('/api/consultations/:id/report', async (req, res) => {
+  try {
+    const { direction, strengths, developments, actionPlan, isRecommended, recommendedRoles } = req.body;
+    const consultation = await Consultation.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: 'completed',
+        report: {
+          direction, strengths, developments, actionPlan,
+          isRecommended: isRecommended === true || isRecommended === 'true',
+          recommendedRoles: recommendedRoles || [],
+          createdAt: new Date()
+        },
+        // legacy 호환
+        evaluation: {
+          recommendation: direction,
+          isHighlyRecommended: isRecommended === true || isRecommended === 'true',
+          recommendedRoles: recommendedRoles || [],
+          createdAt: new Date()
+        }
+      },
+      { new: true }
+    );
+    if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
+    res.json({ success: true, consultation });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
 
 // 9. 평가 및 추천서 등록
 app.patch('/api/consultations/:id/evaluate', async (req, res) => {

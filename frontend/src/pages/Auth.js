@@ -81,6 +81,7 @@ export function Register() {
     name: '', role: 'seeker', field: '', description: '',
     phone: '', companyName: '', yearsOfExperience: '', currentCompany: '',
     gender: 'other',
+    careerHistory: '', achievements: '', consultationExpertise: '', consultationStyle: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -88,6 +89,8 @@ export function Register() {
   const [done, setDone] = useState(false);
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const totalSteps = form.role === 'expert' ? 3 : 2;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,6 +120,8 @@ export function Register() {
     }
     setError(''); setStep(2);
   };
+
+  const goStep3 = () => { setError(''); setStep(3); };
 
   if (done) return (
     <div className="auth-page">
@@ -155,6 +160,12 @@ export function Register() {
           <div className={`step-dot ${step >= 1 ? 'active' : ''}`}>1</div>
           <div className="step-line" />
           <div className={`step-dot ${step >= 2 ? 'active' : ''}`}>2</div>
+          {form.role === 'expert' && (
+            <>
+              <div className="step-line" />
+              <div className={`step-dot ${step >= 3 ? 'active' : ''}`}>3</div>
+            </>
+          )}
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -261,6 +272,70 @@ export function Register() {
               {error && <p className="form-error">{error}</p>}
               <div className="row-gap mt-16">
                 <button type="button" className="btn-outline flex-1" onClick={() => setStep(1)}>← 이전</button>
+                {form.role === 'expert' ? (
+                  <button type="button" className="btn-primary flex-2" onClick={goStep3}>다음 →</button>
+                ) : (
+                  <button type="submit" className="btn-primary flex-2" disabled={loading}>
+                    {loading ? '가입 중...' : '가입 완료'}
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+
+          {step === 3 && form.role === 'expert' && (
+            <>
+              <div className="guide-profile-notice">
+                <strong>📝 커리어 가이드 프로필 작성 안내</strong>
+                <p>러너가 가이드를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
+              </div>
+
+              <div className="form-group">
+                <label>경력 이력 *</label>
+                <div className="form-hint">
+                  재직 기간, 기업명, 직책/역할을 시간 역순으로 작성해 주세요.<br />
+                  예) 2018~현재 | (주)카카오 | 서비스기획팀 팀장<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2014~2018 | (주)네이버 | UX기획 선임
+                </div>
+                <textarea className="form-input form-textarea form-textarea-lg"
+                  placeholder={"2020~현재 | (주)OO기업 | 마케팅본부 이사\n2015~2020 | (주)XX회사 | 브랜드마케팅팀 팀장\n2010~2015 | △△에이전시 | 기획팀 대리"}
+                  value={form.careerHistory} onChange={set('careerHistory')} />
+              </div>
+
+              <div className="form-group">
+                <label>주요 성과 / 대표 프로젝트</label>
+                <div className="form-hint">
+                  숫자·결과 중심으로 작성하면 러너에게 더 큰 신뢰를 줍니다.<br />
+                  예) 신규 서비스 출시로 MAU 30만 달성 / 팀 리빌딩 후 이직률 50% 감소
+                </div>
+                <textarea className="form-input form-textarea"
+                  placeholder={"- 브랜드 리뉴얼 프로젝트 총괄, 인지도 40% 향상\n- 신사업 기획 및 투자 유치 20억 달성\n- 조직 문화 개선으로 우수인재 이탈률 감소"}
+                  value={form.achievements} onChange={set('achievements')} />
+              </div>
+
+              <div className="form-group">
+                <label>컨설팅 가능 분야 *</label>
+                <div className="form-hint">
+                  어떤 커리어 고민을 가진 러너에게 도움을 줄 수 있는지 구체적으로 작성해 주세요.
+                </div>
+                <textarea className="form-input form-textarea"
+                  placeholder={"- 마케팅/기획 직군 취업·이직 전략\n- 대기업 → 스타트업 커리어 전환 상담\n- 팀장·임원급으로의 승진 로드맵\n- 포트폴리오 및 자기소개서 방향성"}
+                  value={form.consultationExpertise} onChange={set('consultationExpertise')} />
+              </div>
+
+              <div className="form-group">
+                <label>컨설팅 스타일</label>
+                <div className="form-hint">
+                  러너가 어떤 방식으로 컨설팅이 진행될지 미리 알 수 있도록 작성해 주세요.
+                </div>
+                <textarea className="form-input form-textarea"
+                  placeholder={"러너의 이야기를 충분히 듣고 현실적인 대안을 제시합니다. 거창한 이론보다 제가 직접 경험한 사례와 실무 노하우를 중심으로 솔직하게 조언드립니다."}
+                  value={form.consultationStyle} onChange={set('consultationStyle')} />
+              </div>
+
+              {error && <p className="form-error">{error}</p>}
+              <div className="row-gap mt-16">
+                <button type="button" className="btn-outline flex-1" onClick={() => setStep(2)}>← 이전</button>
                 <button type="submit" className="btn-primary flex-2" disabled={loading}>
                   {loading ? '가입 중...' : '가입 완료'}
                 </button>

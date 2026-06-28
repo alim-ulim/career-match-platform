@@ -780,6 +780,87 @@ input, textarea, select { font-family: inherit; }
   border-radius: 6px; font-size: 0.85rem;
 }
 .badge-recommend { background: #fff3cd; color: #856404; padding: 2px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+.status-rejected { display: inline-flex; align-items: center; gap: 4px; color: #dc2626; font-size: 0.8rem; font-weight: 600; }
+
+/* 컨설팅 액션 버튼 */
+.consult-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-reject {
+  background: #fee2e2; color: #dc2626;
+  border: 1px solid #fca5a5; padding: 8px 18px; border-radius: 6px;
+  font-weight: 700; font-size: 0.85rem; transition: background 0.2s;
+}
+.btn-reject:hover { background: #dc2626; color: #fff; }
+.consult-rejected { margin-top: 8px; background: #fee2e2; border-left: 4px solid #dc2626; padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; color: #b91c1c; }
+.consult-done-guide { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+/* 흐름 단계 표시 */
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.flow-step {
+  display: flex; gap: 14px; padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-step.done { background: #f0fdf4; }
+.flow-step.active { background: #eff6ff; }
+.flow-step.waiting { background: #fafafa; opacity: 0.8; }
+.flow-step-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 800; color: #fff;
+  background: var(--border);
+}
+.flow-step.done .flow-step-num { background: #059669; }
+.flow-step.active .flow-step-num { background: var(--primary); }
+.flow-step-body { flex: 1; }
+.flow-step-body strong { font-size: 0.9rem; display: block; margin-bottom: 4px; }
+.flow-step-sub { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+.flow-toggle-btn {
+  margin-top: 8px; background: var(--primary-light); color: var(--primary);
+  border: 1px solid var(--primary); padding: 6px 14px;
+  border-radius: 6px; font-weight: 700; font-size: 0.82rem;
+}
+.flow-toggle-btn:hover { background: var(--primary); color: #fff; }
+.flow-toggle-btn.primary { background: var(--primary); color: #fff; }
+.flow-toggle-btn.primary:hover { background: var(--primary-dark); }
+
+/* 사전 인터뷰 / 리포트 폼 */
+.flow-form { background: #fff; border: 1.5px solid var(--primary); border-radius: 10px; padding: 20px; margin-top: 12px; }
+.flow-form-title { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+.flow-form-desc { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+
+/* 사전 인터뷰 뷰 */
+.pre-interview-view { background: #f8f9fa; border-radius: 8px; padding: 16px; margin-top: 10px; }
+.pi-item { margin-bottom: 12px; }
+.pi-item:last-child { margin-bottom: 0; }
+.pi-item strong { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.pi-item p { font-size: 0.88rem; line-height: 1.6; white-space: pre-line; }
+
+/* 커리어 리포트 뷰 */
+.report-view { background: linear-gradient(135deg, #f0fdf4, #eff6ff); border: 1.5px solid #a7f3d0; border-radius: 12px; padding: 20px; margin-top: 12px; }
+.report-view-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.report-badge { background: var(--primary); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+.report-date { font-size: 0.78rem; color: var(--text-muted); }
+.report-section { margin-bottom: 16px; }
+.report-section:last-child { margin-bottom: 0; }
+.report-section-title { font-size: 0.85rem; font-weight: 800; color: #059669; margin-bottom: 6px; }
+.report-section p { font-size: 0.88rem; line-height: 1.7; color: #333; }
+.report-recommend-banner { margin-top: 16px; background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; font-weight: 700; color: #92400e; }
+.report-roles { font-size: 0.8rem; font-weight: 400; margin-top: 4px; }
+
+/* 가이드 상세 경력 카드 */
+.guide-detail-card { background: #fff; border-radius: var(--radius); padding: 24px 28px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+.guide-detail-section { margin-bottom: 18px; }
+.guide-detail-section:last-child { margin-bottom: 0; }
+.guide-detail-label { font-size: 0.78rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.guide-detail-section p { font-size: 0.88rem; line-height: 1.7; color: #333; }
+
+/* 가이드 회원가입 안내 박스 */
+.guide-profile-notice { background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.guide-profile-notice strong { display: block; font-size: 0.95rem; margin-bottom: 6px; }
+.guide-profile-notice p { font-size: 0.83rem; color: #1e40af; line-height: 1.5; }
+.form-hint { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; background: #f8f9fa; border-radius: 6px; padding: 8px 10px; }
+.form-textarea-lg { height: 130px; }
+.check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 6px; }
 
 /* === 모달 === */
 .modal-overlay {
