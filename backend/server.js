@@ -684,6 +684,34 @@ app.get('/api/admin/users', adminMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
+// 관리자: 유저 등록
+app.post('/api/admin/users', adminMiddleware, async (req, res) => {
+  try {
+    const { email, password, name, role, field, description, yearsOfExperience, currentCompany, gender } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ success: false, error: '이메일, 비밀번호, 이름은 필수입니다.' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      email, password: hashedPassword, name,
+      role: role || 'seeker',
+      field: field || '',
+      description: description || '',
+      yearsOfExperience: Number(yearsOfExperience) || 0,
+      currentCompany: currentCompany || '',
+      gender: gender || 'other',
+      emailVerified: true,
+    });
+    await newUser.save();
+    const uObj = newUser.toObject ? newUser.toObject() : { ...newUser };
+    delete uObj.password;
+    res.status(201).json({ success: true, user: uObj });
+  } catch (err) {
+    const msg = err.code === 11000 ? '이미 사용 중인 이메일입니다.' : err.message;
+    res.status(400).json({ success: false, error: msg });
+  }
+});
+
 // 관리자: 유저 수정
 app.put('/api/admin/users/:id', adminMiddleware, async (req, res) => {
   try {

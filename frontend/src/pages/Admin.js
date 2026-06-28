@@ -36,11 +36,16 @@ function AdminLogin({ onLogin }) {
 
 const ROLE_LABEL = { expert: '커리어 가이드', seeker: '커리어 러너', company: '파트너 기업', admin: '관리자' };
 
+const EMPTY_NEW = { name: '', email: '', password: '', role: 'seeker', field: '', currentCompany: '', yearsOfExperience: '', description: '', gender: 'other' };
+
 function UsersTab() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({});
+  const [showCreate, setShowCreate] = useState(false);
+  const [newData, setNewData] = useState(EMPTY_NEW);
+  const [createErr, setCreateErr] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -65,14 +70,60 @@ function UsersTab() {
     await api.adminDeleteUser(id);
     load();
   };
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setCreateErr('');
+    const d = await api.adminCreateUser(newData);
+    if (d.success) {
+      setShowCreate(false);
+      setNewData(EMPTY_NEW);
+      load();
+    } else {
+      setCreateErr(d.error || '등록 실패');
+    }
+  };
 
   if (loading) return <div className="admin-loading">불러오는 중...</div>;
 
   return (
     <div className="admin-table-wrap">
-      <div className="admin-section-header">
+      <div className="admin-section-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <h3>회원 관리 <span className="admin-count">{users.length}명</span></h3>
+        <button className="admin-btn admin-btn-save" onClick={() => { setShowCreate(v => !v); setCreateErr(''); }}>
+          {showCreate ? '닫기' : '+ 새 유저 등록'}
+        </button>
       </div>
+
+      {showCreate && (
+        <form onSubmit={handleCreate} className="admin-create-form">
+          <div className="admin-create-row">
+            <input className="admin-input-sm" placeholder="이름 *" value={newData.name} onChange={e => setNewData(d => ({ ...d, name: e.target.value }))} required />
+            <input className="admin-input-sm" placeholder="이메일 *" type="email" value={newData.email} onChange={e => setNewData(d => ({ ...d, email: e.target.value }))} required />
+            <input className="admin-input-sm" placeholder="비밀번호 *" type="password" value={newData.password} onChange={e => setNewData(d => ({ ...d, password: e.target.value }))} required />
+            <select className="admin-input-sm" value={newData.role} onChange={e => setNewData(d => ({ ...d, role: e.target.value }))}>
+              <option value="seeker">커리어 러너</option>
+              <option value="expert">커리어 가이드</option>
+              <option value="company">파트너 기업</option>
+            </select>
+          </div>
+          <div className="admin-create-row">
+            <input className="admin-input-sm" placeholder="분야 (예: IT, 마케팅)" value={newData.field} onChange={e => setNewData(d => ({ ...d, field: e.target.value }))} />
+            <input className="admin-input-sm" placeholder="소속 회사" value={newData.currentCompany} onChange={e => setNewData(d => ({ ...d, currentCompany: e.target.value }))} />
+            <input className="admin-input-sm" placeholder="경력 (년)" type="number" min="0" value={newData.yearsOfExperience} onChange={e => setNewData(d => ({ ...d, yearsOfExperience: e.target.value }))} />
+            <select className="admin-input-sm" value={newData.gender} onChange={e => setNewData(d => ({ ...d, gender: e.target.value }))}>
+              <option value="other">성별 미지정</option>
+              <option value="male">남성</option>
+              <option value="female">여성</option>
+            </select>
+          </div>
+          <div className="admin-create-row">
+            <input className="admin-input-sm" style={{ flex: 3 }} placeholder="소개 (선택)" value={newData.description} onChange={e => setNewData(d => ({ ...d, description: e.target.value }))} />
+            <button type="submit" className="admin-btn admin-btn-save">등록</button>
+          </div>
+          {createErr && <p className="admin-err">{createErr}</p>}
+        </form>
+      )}
+
       <table className="admin-table">
         <thead>
           <tr><th>이름</th><th>이메일</th><th>역할</th><th>분야</th><th>경력</th><th>인증</th><th>관리</th></tr>

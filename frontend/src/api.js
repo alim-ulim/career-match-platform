@@ -48,6 +48,7 @@ export const api = {
   adminLogin: (password) => req('POST', '/admin/login', { password }),
   adminStats: () => adminReq('GET', '/admin/stats'),
   adminGetUsers: () => adminReq('GET', '/admin/users'),
+  adminCreateUser: (data) => adminReq('POST', '/admin/users', data),
   adminUpdateUser: (id, data) => adminReq('PUT', `/admin/users/${id}`, data),
   adminDeleteUser: (id) => adminReq('DELETE', `/admin/users/${id}`),
   adminGetConsultations: () => adminReq('GET', '/admin/consultations'),

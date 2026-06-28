@@ -261,38 +261,11 @@ export default function Home() {
             <ul className="benefit-list">
               <li><span className="benefit-check">✓</span>커리어 가이드가 검증·추천한 인재만 열람</li>
               <li><span className="benefit-check">✓</span>전문가가 직접 대면한 인재 추천 가능</li>
-              <li><span className="benefit-check">✓</span>채용 공고 없이도 적합 인재에게 직접 제안</li>
-              <li><span className="benefit-check">✓</span>이직 의사가 있는 인재 위주 — 채용 효율 극대화</li>
+              <li><span className="benefit-check">✓</span>합리적인 비용으로 최적의 인재 채용 가능</li>
             </ul>
           </div>
         </div>
 
-        {/* 핵심 차별점 */}
-        <div className="diff-strip">
-          <div className="diff-item">
-            <span className="diff-num">01</span>
-            <div>
-              <strong>가이드 검증 필터</strong>
-              <p>현직 전문가가 직접 평가·추천한 인재만 기업과 연결됩니다.</p>
-            </div>
-          </div>
-          <div className="diff-divider" />
-          <div className="diff-item">
-            <span className="diff-num">02</span>
-            <div>
-              <strong>리포트 기반 신뢰</strong>
-              <p>자기소개서 대신 커리어 리포트로 인재를 입체적으로 파악합니다.</p>
-            </div>
-          </div>
-          <div className="diff-divider" />
-          <div className="diff-item">
-            <span className="diff-num">03</span>
-            <div>
-              <strong>러너 주도권 보장</strong>
-              <p>기업 추천 신청은 러너가 직접 결정 — 원치 않으면 리포트만 받아도 됩니다.</p>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 이용 방법 — 역할별 탭 */}
