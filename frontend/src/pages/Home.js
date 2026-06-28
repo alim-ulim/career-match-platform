@@ -177,24 +177,48 @@ export default function Home() {
             <div className="eco-node-sub">커리어 방향을 찾는 인재</div>
           </div>
           <div className="eco-arrow-block">
-            <div className="eco-arrow-line">
-              <span className="eco-arrow-tag">컨설팅 신청 →</span>
+            <div className="eco-arrow-row">
+              <div className="eco-arrow-shaft forward">
+                <span className="eco-arrow-label">컨설팅 신청</span>
+                <svg className="eco-svg-arrow" viewBox="0 0 60 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 8 H52" stroke="#00c7ae" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M48 3 L58 8 L48 13" stroke="#00c7ae" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+              </div>
             </div>
-            <div className="eco-arrow-line reverse">
-              <span className="eco-arrow-tag">← 커리어 리포트 수령</span>
+            <div className="eco-arrow-row">
+              <div className="eco-arrow-shaft backward">
+                <svg className="eco-svg-arrow" viewBox="0 0 60 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M60 8 H8" stroke="#0891b2" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M12 3 L2 8 L12 13" stroke="#0891b2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+                <span className="eco-arrow-label">커리어 방향 수립</span>
+              </div>
             </div>
           </div>
           <div className="eco-node eco-guide">
             <div className="eco-node-icon">🎯</div>
             <div className="eco-node-label">커리어 가이드</div>
-            <div className="eco-node-sub">10년+ 현직 전문가</div>
+            <div className="eco-node-sub">전현직 각 분야 전문가</div>
           </div>
           <div className="eco-arrow-block">
-            <div className="eco-arrow-line">
-              <span className="eco-arrow-tag">인재 추천 →</span>
+            <div className="eco-arrow-row">
+              <div className="eco-arrow-shaft forward">
+                <span className="eco-arrow-label">인재 추천</span>
+                <svg className="eco-svg-arrow" viewBox="0 0 60 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 8 H52" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M48 3 L58 8 L48 13" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+              </div>
             </div>
-            <div className="eco-arrow-line reverse">
-              <span className="eco-arrow-tag">← 파트너십</span>
+            <div className="eco-arrow-row">
+              <div className="eco-arrow-shaft backward">
+                <svg className="eco-svg-arrow" viewBox="0 0 60 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M60 8 H8" stroke="#0891b2" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M12 3 L2 8 L12 13" stroke="#0891b2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+                <span className="eco-arrow-label">파트너십</span>
+              </div>
             </div>
           </div>
           <div className="eco-node eco-company">
@@ -214,7 +238,7 @@ export default function Home() {
             <ul className="benefit-list">
               <li><span className="benefit-check">✓</span>10년+ 현직 가이드의 맞춤형 1:1 조언</li>
               <li><span className="benefit-check">✓</span>나만의 커리어 리포트로 강점·방향 정립</li>
-              <li><span className="benefit-check">✓</span>원할 때만 파트너 기업 추천 신청 — 강요 없음</li>
+              <li><span className="benefit-check">✓</span>파트너 기업 채용 시 대상 후보자 등록 가능</li>
               <li><span className="benefit-check">✓</span>채용 공고 지원이 아닌, 기업이 먼저 제안하는 경험</li>
             </ul>
           </div>
@@ -227,7 +251,6 @@ export default function Home() {
               <li><span className="benefit-check">✓</span>현직 경험을 활용해 후배를 실질적으로 돕는 기회</li>
               <li><span className="benefit-check">✓</span>커리어 리포트 작성으로 전문가 브랜드 강화</li>
               <li><span className="benefit-check">✓</span>파트너 기업과의 네트워크 자연스럽게 확장</li>
-              <li><span className="benefit-check">✓</span>수락/거절 결정권은 가이드에게 — 부담 없는 참여</li>
             </ul>
           </div>
           <div className="benefit-card benefit-company">
@@ -237,7 +260,7 @@ export default function Home() {
             </div>
             <ul className="benefit-list">
               <li><span className="benefit-check">✓</span>커리어 가이드가 검증·추천한 인재만 열람</li>
-              <li><span className="benefit-check">✓</span>커리어 리포트로 지원서보다 깊은 인재 이해</li>
+              <li><span className="benefit-check">✓</span>전문가가 직접 대면한 인재 추천 가능</li>
               <li><span className="benefit-check">✓</span>채용 공고 없이도 적합 인재에게 직접 제안</li>
               <li><span className="benefit-check">✓</span>이직 의사가 있는 인재 위주 — 채용 효율 극대화</li>
             </ul>
