@@ -19,7 +19,7 @@ export default function Navbar() {
     <nav className="navbar">
       <Link to="/" className="navbar-logo" onClick={close}>
         <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
-        <span>레퍼로</span>
+        <span className="navbar-logo-text">Refer<span className="navbar-logo-plus">+</span>路</span>
       </Link>
 
       <div className="navbar-menu">
