@@ -1226,3 +1226,42 @@ input, textarea, select { font-family: inherit; }
   .matching-card { flex-direction: column; align-items: flex-start; }
   .matching-card-right { align-self: flex-end; }
 }
+
+/* ── 소수정예 레퍼러 섹션 ── */
+.elite-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 80px 24px;
+}
+.elite-inner {
+  max-width: 760px; margin: 0 auto; text-align: center;
+}
+.elite-badge {
+  display: inline-block;
+  background: rgba(0,199,174,0.15); color: #00c7ae;
+  border: 1px solid rgba(0,199,174,0.35);
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+  padding: 6px 16px; border-radius: 99px; margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.elite-title {
+  font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800;
+  color: #f1f5f9; margin-bottom: 16px; line-height: 1.3;
+}
+.elite-desc {
+  color: #94a3b8; font-size: 1rem; line-height: 1.8; margin-bottom: 40px;
+}
+.elite-criteria {
+  display: flex; flex-direction: column; gap: 20px;
+  text-align: left; margin-bottom: 40px;
+}
+.elite-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 20px 24px;
+}
+.elite-icon {
+  color: #00c7ae; font-size: 1.2rem; flex-shrink: 0; margin-top: 2px;
+}
+.elite-item strong { display: block; color: #f1f5f9; margin-bottom: 4px; font-size: 0.95rem; }
+.elite-item p { color: #94a3b8; font-size: 0.88rem; margin: 0; line-height: 1.6; }
+.elite-cta { display: inline-block; }

@@ -13,7 +13,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || 'alimulim_secret_key';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'ProPath <noreply@propath.kr>';
+const FROM_EMAIL = process.env.FROM_EMAIL || '레퍼로 <noreply@refero.kr>';
 
 // 이메일 발송 (Resend)
 async function sendEmail(to, subject, html) {
@@ -369,12 +369,12 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
 
     // 인증 메일 발송
     const verifyUrl = `${FRONTEND_URL}/verify-email?token=${verifyToken}&email=${encodeURIComponent(email)}`;
-    await sendEmail(email, '[ProPath] 이메일 인증을 완료해 주세요', `
+    await sendEmail(email, '[레퍼로] 이메일 인증을 완료해 주세요', `
       <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#fff;border-radius:12px;">
-        <h2 style="color:#00c7ae;margin-bottom:8px;">ProPath에 오신 걸 환영합니다!</h2>
+        <h2 style="color:#00c7ae;margin-bottom:8px;">레퍼로에 오신 걸 환영합니다!</h2>
         <p style="color:#333;line-height:1.6;margin-bottom:24px;">
           안녕하세요, <strong>${name}</strong>님.<br/>
-          아래 버튼을 클릭하면 이메일 인증이 완료되고 ProPath 서비스를 이용하실 수 있습니다.
+          아래 버튼을 클릭하면 이메일 인증이 완료되고 레퍼로 서비스를 이용하실 수 있습니다.
         </p>
         <a href="${verifyUrl}" style="display:inline-block;background:#00c7ae;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px;">이메일 인증하기</a>
         <p style="margin-top:24px;color:#888;font-size:13px;">
@@ -382,7 +382,7 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
           본인이 가입하지 않았다면 이 이메일을 무시하세요.
         </p>
         <hr style="border:none;border-top:1px solid #eee;margin:24px 0"/>
-        <p style="color:#bbb;font-size:12px;">ProPath — 커리어를 함께 설계하다</p>
+        <p style="color:#bbb;font-size:12px;">레퍼로(Refero) — 커리어를 함께 설계하다</p>
       </div>
     `);
 
@@ -434,7 +434,7 @@ app.post('/api/auth/resend-verify', async (req, res) => {
     await user.save();
 
     const verifyUrl = `${FRONTEND_URL}/verify-email?token=${verifyToken}&email=${encodeURIComponent(email)}`;
-    await sendEmail(email, '[ProPath] 이메일 인증을 완료해 주세요', `
+    await sendEmail(email, '[레퍼로] 이메일 인증을 완료해 주세요', `
       <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;">
         <h2 style="color:#00c7ae;">이메일 인증 재발송</h2>
         <a href="${verifyUrl}" style="display:inline-block;background:#00c7ae;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;">이메일 인증하기</a>

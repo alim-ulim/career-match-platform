@@ -27,8 +27,10 @@ function AppRoutes() {
       <main>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/guides" element={<UserList />} />
-        <Route path="/runners" element={<UserList />} />
+        <Route path="/referrers" element={<UserList />} />
+        <Route path="/seekers" element={<UserList />} />
+        <Route path="/guides" element={<Navigate to="/referrers" replace />} />
+        <Route path="/runners" element={<Navigate to="/seekers" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />

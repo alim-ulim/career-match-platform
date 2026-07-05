@@ -9,19 +9,19 @@ export default function Footer() {
         {/* 상단: 브랜드 + 링크 */}
         <div className="footer-top">
           <div className="footer-brand">
-            <div className="footer-logo">ProPath</div>
+            <div className="footer-logo">레퍼로</div>
             <p className="footer-tagline">커리어를 함께 설계하다</p>
             <p className="footer-desc">
-              현직 전문가의 진짜 경험으로<br />
-              올바른 커리어 경로를 찾아드립니다.
+              현직 전문가의 검증된 리포트로<br />
+              커리어의 다음 방향을 찾아드립니다.
             </p>
           </div>
 
           <div className="footer-links-group">
             <div className="footer-col">
               <h4>서비스</h4>
-              <Link to="/guides">커리어 가이드 찾기</Link>
-              <Link to="/runners">커리어 러너 찾기</Link>
+              <Link to="/referrers">레퍼러 찾기</Link>
+              <Link to="/seekers">시커 둘러보기</Link>
               <Link to="/register">회원가입</Link>
             </div>
             <div className="footer-col">
@@ -51,7 +51,7 @@ export default function Footer() {
             <span><strong>주소</strong> 서울특별시 관악구 은천로 110 WS타워 806호</span>
           </div>
           <p className="footer-copy">
-            © {new Date().getFullYear()} Alim&amp;Ulim. All rights reserved. ProPath는 알림앤울림의 서비스입니다.
+            © {new Date().getFullYear()} Alim&amp;Ulim. All rights reserved. 레퍼로(Refero)는 알림앤울림의 서비스입니다.
           </p>
         </div>
       </div>

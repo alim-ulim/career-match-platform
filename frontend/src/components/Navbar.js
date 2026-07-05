@@ -18,13 +18,13 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo" onClick={close}>
-        <img src="/alim-ulim.jpg" alt="ProPath Logo" onError={e => e.target.style.display = 'none'} />
-        <span>ProPath</span>
+        <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
+        <span>레퍼로</span>
       </Link>
 
       <div className="navbar-menu">
-        <Link to="/guides" className="nav-link">커리어 가이드 찾기</Link>
-        <Link to="/runners" className="nav-link">커리어 러너 찾기</Link>
+        <Link to="/referrers" className="nav-link">레퍼러 찾기</Link>
+        <Link to="/seekers" className="nav-link">시커 찾기</Link>
         <Link to="/matching" className="nav-link">매칭 현황</Link>
         {user ? (
           <>
@@ -49,8 +49,8 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="mobile-menu">
-          <Link to="/guides" className="mobile-link" onClick={close}>커리어 가이드 찾기</Link>
-          <Link to="/runners" className="mobile-link" onClick={close}>커리어 러너 찾기</Link>
+          <Link to="/referrers" className="mobile-link" onClick={close}>레퍼러 찾기</Link>
+          <Link to="/seekers" className="mobile-link" onClick={close}>시커 찾기</Link>
           <Link to="/matching" className="mobile-link" onClick={close}>매칭 현황</Link>
           {user ? (
             <>

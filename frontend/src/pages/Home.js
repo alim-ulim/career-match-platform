@@ -8,24 +8,24 @@ import { useAuth } from '../hooks/useAuth';
 import { AvatarFallback, HandshakeIcon, UserBadgeIcon, GrowthIcon } from '../components/Icons';
 
 const HOW_TO = {
-  runner: {
-    label: '커리어 러너',
+  seeker: {
+    label: '시커 (Seeker)',
     color: '#00c7ae',
     steps: [
-      { num: '01', title: '커리어 가이드 탐색', desc: '분야·경력별로 등록된 커리어 가이드를 찾아 프로필과 커리어를 확인합니다.' },
+      { num: '01', title: '레퍼러 탐색', desc: '분야·경력별로 등록된 레퍼러를 찾아 프로필과 커리어를 확인합니다.' },
       { num: '02', title: '컨설팅 신청', desc: '현재 고민하는 커리어 방향이나 전환 목표를 작성해 컨설팅을 신청합니다.' },
-      { num: '03', title: '커리어 리포트 수령', desc: '가이드가 커리어 방향에 대한 맞춤 조언과 로드맵을 담은 리포트를 작성합니다.' },
-      { num: '04', title: '기업 추천 신청 (선택)', desc: '리포트를 받은 후, 원하는 경우 파트너 기업 추천을 직접 신청할 수 있습니다.' },
+      { num: '03', title: '커리어 리포트 수령', desc: '레퍼러가 1:1 미팅 후 맞춤 커리어 리포트를 작성해 전달합니다.' },
+      { num: '04', title: '기업 추천 신청 (선택)', desc: '리포트를 받은 후, 원하는 경우 파트너 기업 추천을 신청할 수 있습니다.' },
     ]
   },
-  guide: {
-    label: '커리어 가이드',
+  referrer: {
+    label: '레퍼러 (Referrer)',
     color: '#0891b2',
     steps: [
-      { num: '01', title: '프로필 등록', desc: '현직 경력, 분야, 전문성을 담은 프로필을 등록하고 커리어 러너의 요청을 받습니다.' },
-      { num: '02', title: '컨설팅 요청 수락', desc: '러너의 고민과 목표를 확인하고 컨설팅 진행 여부를 결정합니다.' },
-      { num: '03', title: '커리어 리포트 작성', desc: '러너의 커리어 방향에 대한 조언, 전략, 로드맵을 담은 커리어 리포트를 작성합니다.' },
-      { num: '04', title: '파트너 기업 추천', desc: '리포트 작성 후, 적합하다고 판단되면 파트너 기업 추천 대상으로 등록합니다.' },
+      { num: '01', title: '프로필 등록', desc: '현직 경력, 분야, 전문성을 담은 프로필을 등록하고 시커의 컨설팅 요청을 받습니다.' },
+      { num: '02', title: '컨설팅 요청 수락', desc: '시커의 고민과 목표를 확인하고 컨설팅 진행 여부를 결정합니다.' },
+      { num: '03', title: '커리어 리포트 작성', desc: '1:1 미팅 후 시커의 커리어 방향, 전략, 로드맵을 담은 리포트를 작성합니다.' },
+      { num: '04', title: '파트너 기업 추천', desc: '리포트 작성 후 적합한 시커를 파트너 기업 추천 대상으로 등록합니다.' },
     ]
   },
   company: {
@@ -33,8 +33,8 @@ const HOW_TO = {
     color: '#7c3aed',
     steps: [
       { num: '01', title: '파트너십 가입', desc: '채용 니즈와 선호 직무를 등록하고 파트너 기업으로 가입합니다.' },
-      { num: '02', title: '커리어 러너 탐색', desc: '커리어 가이드가 추천한 러너 목록과 커리어 리포트를 확인합니다.' },
-      { num: '03', title: '리포트 기반 면접 제안', desc: '커리어 리포트로 검증된 인재에게 면접 또는 채용 제안을 직접 보낼 수 있습니다.' },
+      { num: '02', title: '시커 탐색', desc: '레퍼러가 직접 검증·추천한 시커 목록과 커리어 리포트를 확인합니다.' },
+      { num: '03', title: '리포트 기반 채용 제안', desc: '커리어 리포트로 검증된 인재에게 면접 또는 채용 제안을 보낼 수 있습니다.' },
     ]
   }
 };
@@ -47,7 +47,7 @@ export default function Home() {
   const [feeds, setFeeds] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [feedIdx, setFeedIdx] = useState(0);
-  const [activeRole, setActiveRole] = useState('runner');
+  const [activeRole, setActiveRole] = useState('seeker');
 
   useEffect(() => {
     api.getExperts().then(d => setGuides(Array.isArray(d) ? d : []));
@@ -66,7 +66,7 @@ export default function Home() {
       senderName, message,
       expertName: target.name, expertId: target._id,
       senderId: user?._id || 'guest'
-    }).then(() => { showToast('커리어 컨설팅 신청이 완료되었습니다!'); setSelectedItem(null); });
+    }).then(() => { showToast('컨설팅 신청이 완료되었습니다!'); setSelectedItem(null); });
   };
 
   const handleEvaluate = (id, evalData) => {
@@ -91,10 +91,11 @@ export default function Home() {
       <section className="hero" style={{ backgroundImage: "url('/hero_bg.png')" }}>
         <div className="hero-overlay" />
         <div className="hero-content">
-          <h1 className="hero-title">커리어를 함께 설계하다</h1>
+          <h1 className="hero-title">상담에서 끝나지 않습니다</h1>
           <p className="hero-sub">
-            10년차 현직 커리어 가이드의 조언으로<br />
-            올바른 커리어 방향을 찾고, 파트너 기업과 연결됩니다.
+            현직 전문가 레퍼러가 직접 작성한 커리어 리포트가<br />
+            기업의 채용 제안으로 이어집니다.<br />
+            <span style={{ fontSize: '0.9em', opacity: 0.85 }}>취업을 준비하는 이들부터, 커리어 전환을 고민하는 시니어까지.</span>
           </p>
 
           {feeds.length > 0 && (
@@ -105,67 +106,103 @@ export default function Home() {
           )}
 
           <div className="hero-btns">
-            <Link to="/guides" className="btn-hero-primary">커리어 가이드 찾기</Link>
-            <Link to="/runners" className="btn-hero-outline">커리어 러너 찾기</Link>
+            <Link to="/referrers" className="btn-hero-primary">레퍼러 찾기</Link>
+            <Link to="/seekers" className="btn-hero-outline">시커 둘러보기</Link>
           </div>
         </div>
       </section>
 
-      {/* ProPath 의미 */}
+      {/* 레퍼로 의미 */}
       <section className="propath-meaning">
         <div className="meaning-inner">
-          <div className="meaning-logo">ProPath</div>
+          <div className="meaning-logo">레퍼로</div>
           <div className="meaning-divider" />
           <div className="meaning-text">
             <div className="meaning-item">
-              <span className="meaning-word">Pro</span>
-              <span className="meaning-desc">Professional — 10년 이상의 현직 경험을 가진 진짜 전문가</span>
+              <span className="meaning-word">Refer</span>
+              <span className="meaning-desc">추천하다 — 현직 전문가가 직접 검증하고 추천하는 인재</span>
             </div>
             <div className="meaning-item">
-              <span className="meaning-word">Path</span>
-              <span className="meaning-desc">Pathway — 커리어의 올바른 방향과 성장 경로</span>
+              <span className="meaning-word">로 (路)</span>
+              <span className="meaning-desc">길 · 방향 — 커리어의 올바른 방향과 다음 경로</span>
             </div>
           </div>
           <div className="meaning-divider" />
-          <p className="meaning-tagline">ProPath는 현직 전문가의 진짜 경험으로 당신의 커리어 경로를 설계합니다.</p>
+          <p className="meaning-tagline">레퍼로는 현직 전문가의 검증된 리포트로 당신의 커리어 다음 경로를 설계합니다.</p>
         </div>
       </section>
 
       {/* 서비스 소개 */}
       <section className="about-section">
         <div className="section-header">
-          <h2>ProPath는 어떤 서비스인가요?</h2>
-          <p>현직 커리어 가이드의 조언으로 검증된 커리어 러너를 파트너 기업에 연결하는 신뢰 기반 플랫폼</p>
+          <h2>레퍼로는 어떤 서비스인가요?</h2>
+          <p>현직 레퍼러의 검증된 리포트로 시커를 파트너 기업과 연결하는 신뢰 기반 플랫폼</p>
         </div>
         <div className="about-grid">
           <div className="about-card">
             <div className="about-icon-wrap">
               <HandshakeIcon size={36} color="#00c7ae" />
             </div>
-            <h3>신뢰 기반 매칭 모델</h3>
-            <p>단순 채용 공고가 아닙니다. 커리어 가이드가 작성한 커리어 리포트로 검증된 인재만을 파트너 기업과 연결하는 프리미엄 서비스입니다.</p>
+            <h3>상담이 아닌 결과물</h3>
+            <p>세션이 끝나면 사라지는 조언이 아닙니다. 레퍼러가 작성한 커리어 리포트라는 문서화된 결과물이 남고, 그것이 채용 제안으로 이어집니다.</p>
           </div>
           <div className="about-card">
             <div className="about-icon-wrap">
               <UserBadgeIcon size={36} color="#00c7ae" />
             </div>
-            <h3>커리어 가이드 (Career Guide)</h3>
-            <p>10년 이상 현직 경험을 보유한 멘토입니다. 커리어 러너의 고민을 듣고 방향을 조언하며, 맞춤형 커리어 리포트를 통해 파트너 기업에 인재를 추천합니다.</p>
+            <h3>레퍼러 (Referrer)</h3>
+            <p>전현직 각 분야 전문가로, 엄격한 기준으로 선정된 소수 정예입니다. 시커의 고민을 1:1로 듣고 맞춤형 커리어 리포트로 다음 방향을 제시합니다.</p>
           </div>
           <div className="about-card">
             <div className="about-icon-wrap">
               <GrowthIcon size={36} color="#00c7ae" />
             </div>
-            <h3>커리어 러너 (Career Runner)</h3>
-            <p>더 나은 커리어 방향을 찾는 인재입니다. 커리어 가이드에게 컨설팅을 받고 리포트를 바탕으로, 원하는 경우 파트너 기업의 제안을 받을 수 있습니다.</p>
+            <h3>시커 (Seeker)</h3>
+            <p>더 나은 커리어를 찾는 모든 인재입니다. 주니어 취업 준비생부터 커리어 전환을 고민하는 시니어까지, 레퍼러의 리포트로 다음 경로를 확인합니다.</p>
           </div>
+        </div>
+      </section>
+
+      {/* 소수 정예 레퍼러 프레이밍 */}
+      <section className="elite-section">
+        <div className="elite-inner">
+          <div className="elite-badge">레퍼러 선정 기준</div>
+          <h2 className="elite-title">레퍼로의 레퍼러는 아무나 될 수 없습니다</h2>
+          <p className="elite-desc">
+            현직 경험과 실제 대면 컨설팅 역량을 기준으로 엄선합니다.<br />
+            숫자가 적은 이유는 이유가 있습니다 — 그것이 레퍼로의 신뢰입니다.
+          </p>
+          <div className="elite-criteria">
+            <div className="elite-item">
+              <span className="elite-icon">✦</span>
+              <div>
+                <strong>검증된 현직 경력</strong>
+                <p>각 분야에서 실제 성과를 낸 전현직 전문가</p>
+              </div>
+            </div>
+            <div className="elite-item">
+              <span className="elite-icon">✦</span>
+              <div>
+                <strong>1:1 대면 컨설팅 역량</strong>
+                <p>단순 조언이 아닌 구체적 리포트를 작성할 수 있는 역량</p>
+              </div>
+            </div>
+            <div className="elite-item">
+              <span className="elite-icon">✦</span>
+              <div>
+                <strong>추천 책임</strong>
+                <p>본인이 서명한 리포트로 파트너 기업에 인재를 직접 추천</p>
+              </div>
+            </div>
+          </div>
+          <Link to="/referrers" className="btn-primary elite-cta">레퍼러 살펴보기 →</Link>
         </div>
       </section>
 
       {/* 플랫폼 구조 */}
       <section className="ecosystem-section">
         <div className="section-header">
-          <h2>ProPath 플랫폼 구조</h2>
+          <h2>레퍼로 플랫폼 구조</h2>
           <p>세 참여자가 서로 연결되어 가치를 나누는 신뢰 기반 에코시스템</p>
         </div>
 
@@ -173,7 +210,7 @@ export default function Home() {
         <div className="ecosystem-flow">
           <div className="eco-node eco-runner">
             <div className="eco-node-icon">🏃</div>
-            <div className="eco-node-label">커리어 러너</div>
+            <div className="eco-node-label">시커</div>
             <div className="eco-node-sub">커리어 방향을 찾는 인재</div>
           </div>
           <div className="eco-arrow-block">
@@ -198,7 +235,7 @@ export default function Home() {
           </div>
           <div className="eco-node eco-guide">
             <div className="eco-node-icon">🎯</div>
-            <div className="eco-node-label">커리어 가이드</div>
+            <div className="eco-node-label">레퍼러</div>
             <div className="eco-node-sub">전현직 각 분야 전문가</div>
           </div>
           <div className="eco-arrow-block">
@@ -232,11 +269,11 @@ export default function Home() {
         <div className="benefit-grid">
           <div className="benefit-card benefit-runner">
             <div className="benefit-card-header">
-              <span className="benefit-badge" style={{ background: '#00c7ae' }}>커리어 러너</span>
+              <span className="benefit-badge" style={{ background: '#00c7ae' }}>시커 (Seeker)</span>
               <h3>내 커리어의 방향을 찾다</h3>
             </div>
             <ul className="benefit-list">
-              <li><span className="benefit-check">✓</span>10년+ 현직 가이드의 맞춤형 1:1 조언</li>
+              <li><span className="benefit-check">✓</span>검증된 레퍼러의 맞춤형 1:1 조언</li>
               <li><span className="benefit-check">✓</span>나만의 커리어 리포트로 강점·방향 정립</li>
               <li><span className="benefit-check">✓</span>파트너 기업 채용 시 대상 후보자 등록 가능</li>
               <li><span className="benefit-check">✓</span>채용 공고 지원이 아닌, 기업이 먼저 제안하는 경험</li>
@@ -244,7 +281,7 @@ export default function Home() {
           </div>
           <div className="benefit-card benefit-guide">
             <div className="benefit-card-header">
-              <span className="benefit-badge" style={{ background: '#0891b2' }}>커리어 가이드</span>
+              <span className="benefit-badge" style={{ background: '#0891b2' }}>레퍼러 (Referrer)</span>
               <h3>전문성을 사회에 환원하다</h3>
             </div>
             <ul className="benefit-list">
@@ -259,7 +296,7 @@ export default function Home() {
               <h3>검증된 인재와 연결되다</h3>
             </div>
             <ul className="benefit-list">
-              <li><span className="benefit-check">✓</span>커리어 가이드가 검증·추천한 인재만 열람</li>
+              <li><span className="benefit-check">✓</span>레퍼러가 검증·추천한 인재만 열람</li>
               <li><span className="benefit-check">✓</span>전문가가 직접 대면한 인재 추천 가능</li>
               <li><span className="benefit-check">✓</span>합리적인 비용으로 최적의 인재 채용 가능</li>
             </ul>
@@ -271,8 +308,8 @@ export default function Home() {
       {/* 이용 방법 — 역할별 탭 */}
       <section className="steps-section">
         <div className="section-header">
-          <h2>ProPath 이용 방법</h2>
-          <p>역할에 따라 ProPath를 이용하는 방법이 다릅니다</p>
+          <h2>레퍼로 이용 방법</h2>
+          <p>역할에 따라 레퍼로를 이용하는 방법이 다릅니다</p>
         </div>
 
         <div className="role-tabs">
@@ -302,12 +339,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 커리어 가이드 미리보기 */}
+      {/* 레퍼러 미리보기 */}
       {guides.length > 0 && (
         <section className="list-preview-section">
           <div className="section-header">
-            <h2>검증된 커리어 가이드를 만나보세요</h2>
-            <Link to="/guides" className="see-all">전체보기 →</Link>
+            <h2>검증된 레퍼러를 만나보세요</h2>
+            <Link to="/referrers" className="see-all">전체보기 →</Link>
           </div>
           <div className="card-grid-home">
             {guides.slice(0, 4).map(item => (
