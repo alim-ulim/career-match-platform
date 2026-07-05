@@ -41,6 +41,7 @@ export const api = {
   evaluateConsultation: (id, data) => req('PATCH', `/consultations/${id}/evaluate`, data),
   sendConsultationMessage: (id, data) => req('POST', `/consultations/${id}/messages`, data),
   scheduleConsultation: (id, data) => req('PATCH', `/consultations/${id}/schedule`, data),
+  confirmSchedule: (id) => req('PATCH', `/consultations/${id}/schedule/confirm`),
   uploadReportFile: (id, formData) => req('POST', `/consultations/${id}/report-file`, formData, true),
 
   // Stats

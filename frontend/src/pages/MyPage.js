@@ -57,17 +57,19 @@ function MessageThread({ messages, myRole, myName, onSend }) {
   );
 }
 
-// ── 일정 설정 폼 (가이드) ─────────────────────────────
-function ScheduleForm({ consultationId, onSubmit, onCancel }) {
+// ── 일정 제안 폼 (가이드 or 러너) ─────────────────────
+function ScheduleForm({ consultationId, proposedBy, onSubmit, onCancel, existingNote }) {
   const [scheduledAt, setScheduledAt] = useState('');
-  const [scheduleNote, setScheduleNote] = useState('');
+  const [scheduleNote, setScheduleNote] = useState(existingNote || '');
+  const isCounter = !!existingNote;
   const handleSubmit = async e => {
     e.preventDefault();
-    await onSubmit(consultationId, { scheduledAt, scheduleNote });
+    await onSubmit(consultationId, { scheduledAt, scheduleNote, proposedBy });
   };
   return (
     <form className="flow-form" onSubmit={handleSubmit}>
-      <div className="flow-form-title">📅 컨설팅 일정 설정</div>
+      <div className="flow-form-title">{isCounter ? '📅 다른 일정 역제안' : '📅 컨설팅 일정 제안'}</div>
+      {isCounter && <p className="flow-form-desc">가이드가 제안한 일정이 맞지 않으면 다른 날짜/시간을 제안해 주세요.</p>}
       <div className="form-group">
         <label>컨설팅 일시 *</label>
         <input className="form-input" type="datetime-local" value={scheduledAt} onChange={e => setScheduledAt(e.target.value)} required />
@@ -78,7 +80,7 @@ function ScheduleForm({ consultationId, onSubmit, onCancel }) {
       </div>
       <div className="row-gap mt-16">
         <button type="button" className="btn-outline flex-1" onClick={onCancel}>취소</button>
-        <button type="submit" className="btn-primary flex-2">일정 확정하기</button>
+        <button type="submit" className="btn-primary flex-2">일정 제안하기</button>
       </div>
     </form>
   );
@@ -128,7 +130,7 @@ function StatusBadge({ status }) {
 }
 
 // ── 컨설팅 카드 ───────────────────────────────────────
-function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, onReportUpload, reload }) {
+function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, onConfirmSchedule, onReportUpload, reload }) {
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
 
@@ -136,6 +138,10 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
   const isRunner = user.role === 'seeker';
   const hasMessages  = m.messages && m.messages.length > 0;
   const hasSchedule  = !!m.scheduledAt;
+  const scheduleConfirmed = m.scheduleStatus === 'confirmed';
+  const scheduleProposed  = m.scheduleStatus === 'proposed';
+  const myProposal = scheduleProposed && m.scheduledBy === (isGuide ? 'guide' : 'runner');
+  const theirProposal = scheduleProposed && !myProposal;
   const hasReport    = !!m.reportFile;
 
   return (
@@ -177,32 +183,60 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
 
           {/* Step 2: 일정 */}
           <div className={`flow-step-label ${!hasMessages ? 'disabled' : ''}`}>
-            <span className={`flow-dot ${hasSchedule ? 'done' : hasMessages ? 'active' : ''}`} />
-            <strong>2단계</strong> — 컨설팅 일정 설정
+            <span className={`flow-dot ${scheduleConfirmed ? 'done' : hasSchedule ? 'active' : hasMessages ? 'active' : ''}`} />
+            <strong>2단계</strong> — 컨설팅 일정 협의
           </div>
           {hasMessages && !hasSchedule && !showScheduleForm && (
-            <button className="flow-toggle-btn" onClick={() => setShowScheduleForm(true)}>일정 잡기</button>
+            <button className="flow-toggle-btn" onClick={() => setShowScheduleForm(true)}>일정 제안하기</button>
           )}
-          {hasSchedule && (
+          {/* 러너가 역제안한 경우: 가이드가 수락 or 재제안 */}
+          {hasSchedule && theirProposal && !showScheduleForm && (
+            <div className="schedule-proposal">
+              <div className="schedule-proposal-label">🔔 러너가 일정을 역제안했습니다</div>
+              <div className="schedule-proposal-time">
+                📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
+                {m.scheduleNote && <span> — {m.scheduleNote}</span>}
+              </div>
+              <div className="row-gap mt-12">
+                <button className="btn-accept" onClick={() => onConfirmSchedule(m._id)}>이 일정 수락하기</button>
+                <button className="btn-outline" onClick={() => setShowScheduleForm(true)}>다른 일정 제안하기</button>
+              </div>
+            </div>
+          )}
+          {/* 가이드가 제안 후 러너 수락 대기 중 */}
+          {hasSchedule && myProposal && !showScheduleForm && (
+            <div className="schedule-pending">
+              <div className="schedule-pending-label">⏳ 러너의 수락을 기다리고 있습니다</div>
+              <div className="schedule-proposal-time">
+                📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
+                {m.scheduleNote && <span> — {m.scheduleNote}</span>}
+              </div>
+              <button className="btn-outline mt-8" onClick={() => setShowScheduleForm(true)}>일정 변경 제안</button>
+            </div>
+          )}
+          {/* 일정 확정 */}
+          {scheduleConfirmed && (
             <div className="schedule-confirmed">
-              📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
+              ✅ 일정 확정됨 — {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
               {m.scheduleNote && <span> — {m.scheduleNote}</span>}
             </div>
           )}
           {showScheduleForm && (
             <ScheduleForm
               consultationId={m._id}
+              proposedBy="guide"
+              existingNote={m.scheduleNote}
               onSubmit={async (id, d) => { await onSchedule(id, d); setShowScheduleForm(false); }}
               onCancel={() => setShowScheduleForm(false)}
             />
           )}
 
           {/* Step 3: 리포트 업로드 */}
-          <div className={`flow-step-label ${!hasSchedule ? 'disabled' : ''}`}>
-            <span className={`flow-dot ${hasReport ? 'done' : hasSchedule ? 'active' : ''}`} />
+          <div className={`flow-step-label ${!scheduleConfirmed ? 'disabled' : ''}`}>
+            <span className={`flow-dot ${hasReport ? 'done' : scheduleConfirmed ? 'active' : ''}`} />
             <strong>3단계</strong> — 커리어 리포트 PDF 전달
           </div>
-          {hasSchedule && !hasReport && !showReportForm && (
+          {scheduleConfirmed && !hasReport && !showReportForm && (
             <button className="flow-toggle-btn primary" onClick={() => setShowReportForm(true)}>리포트 업로드하기</button>
           )}
           {hasReport && (
@@ -245,20 +279,51 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           )}
 
           {/* 일정 */}
-          {hasSchedule && (
+          {hasSchedule && theirProposal && !showScheduleForm && (
+            <div className="schedule-proposal">
+              <div className="schedule-proposal-label">📅 가이드가 컨설팅 일정을 제안했습니다</div>
+              <div className="schedule-proposal-time">
+                <strong>{new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}</strong>
+                {m.scheduleNote && <><br />{m.scheduleNote}</>}
+              </div>
+              <div className="row-gap mt-12">
+                <button className="btn-accept" onClick={() => onConfirmSchedule(m._id)}>이 일정 수락하기</button>
+                <button className="btn-outline" onClick={() => setShowScheduleForm(true)}>다른 일정 역제안하기</button>
+              </div>
+            </div>
+          )}
+          {hasSchedule && myProposal && !showScheduleForm && (
+            <div className="schedule-pending">
+              <div className="schedule-pending-label">⏳ 가이드의 수락을 기다리고 있습니다</div>
+              <div className="schedule-proposal-time">
+                📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
+                {m.scheduleNote && <span> — {m.scheduleNote}</span>}
+              </div>
+            </div>
+          )}
+          {scheduleConfirmed && (
             <div className="schedule-confirmed runner">
-              📅 컨설팅 일정이 확정되었습니다<br />
+              ✅ 컨설팅 일정이 확정되었습니다<br />
               <strong>{new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}</strong>
               {m.scheduleNote && <><br />{m.scheduleNote}</>}
             </div>
+          )}
+          {showScheduleForm && (
+            <ScheduleForm
+              consultationId={m._id}
+              proposedBy="runner"
+              existingNote={m.scheduleNote}
+              onSubmit={async (id, d) => { await onSchedule(id, d); setShowScheduleForm(false); }}
+              onCancel={() => setShowScheduleForm(false)}
+            />
           )}
 
           {/* 리포트 대기 */}
           {!hasReport && (
             <div className="report-waiting">
-              {hasSchedule
+              {scheduleConfirmed
                 ? '컨설팅 미팅 후 가이드가 커리어 리포트 PDF를 업로드하면 여기서 다운로드할 수 있습니다.'
-                : '가이드가 일정을 확정하면 안내됩니다.'}
+                : '가이드가 일정을 제안하면 안내됩니다.'}
             </div>
           )}
         </div>
@@ -352,7 +417,12 @@ export default function MyPage() {
   };
   const handleSchedule = async (id, data) => {
     await api.scheduleConsultation(id, data);
-    showToast('컨설팅 일정이 확정되었습니다.');
+    showToast('일정을 제안했습니다. 상대방의 수락을 기다려 주세요.');
+    reload();
+  };
+  const handleConfirmSchedule = async (id) => {
+    await api.confirmSchedule(id);
+    showToast('일정이 확정되었습니다!');
     reload();
   };
   const handleReportUpload = async (id, fd) => {
@@ -491,6 +561,7 @@ export default function MyPage() {
                   onReject={handleReject}
                   onMessage={handleMessage}
                   onSchedule={handleSchedule}
+                  onConfirmSchedule={handleConfirmSchedule}
                   onReportUpload={handleReportUpload}
                   reload={reload}
                 />

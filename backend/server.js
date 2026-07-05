@@ -97,9 +97,11 @@ const ConsultationSchema = new mongoose.Schema({
     text: String,
     createdAt: { type: Date, default: Date.now }
   }],
-  // 컨설팅 일정
+  // 컨설팅 일정 (제안 → 수락 흐름)
   scheduledAt: Date,
   scheduleNote: String,
+  scheduleStatus: { type: String, enum: ['proposed', 'confirmed'], default: null },
+  scheduledBy: { type: String, enum: ['guide', 'runner'], default: null },
   // 커리어 리포트 PDF (가이드 업로드)
   reportFile: String,
   reportUploadedAt: Date,
@@ -672,13 +674,31 @@ app.post('/api/consultations/:id/messages', async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
-// 컨설팅 일정 설정 (가이드)
+// 컨설팅 일정 제안 (가이드 또는 러너가 날짜 제안)
 app.patch('/api/consultations/:id/schedule', async (req, res) => {
   try {
-    const { scheduledAt, scheduleNote } = req.body;
+    const { scheduledAt, scheduleNote, proposedBy } = req.body;
     const consultation = await Consultation.findByIdAndUpdate(
       req.params.id,
-      { scheduledAt: new Date(scheduledAt), scheduleNote: scheduleNote || '' },
+      {
+        scheduledAt: new Date(scheduledAt),
+        scheduleNote: scheduleNote || '',
+        scheduleStatus: 'proposed',
+        scheduledBy: proposedBy || 'guide',
+      },
+      { new: true }
+    );
+    if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
+    res.json({ success: true, consultation });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 컨설팅 일정 수락 확정 (상대방이 제안된 일정 수락)
+app.patch('/api/consultations/:id/schedule/confirm', async (req, res) => {
+  try {
+    const consultation = await Consultation.findByIdAndUpdate(
+      req.params.id,
+      { scheduleStatus: 'confirmed' },
       { new: true }
     );
     if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });

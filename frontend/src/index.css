@@ -876,6 +876,19 @@ input, textarea, select { font-family: inherit; }
   font-size: 0.85rem; color: #1e40af; line-height: 1.6;
 }
 .schedule-confirmed.runner { background: #f0fdf4; border-color: #86efac; color: #166534; }
+.schedule-proposal {
+  background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 8px; padding: 12px 14px; margin: 8px 0;
+}
+.schedule-proposal-label { font-size: 0.85rem; font-weight: 600; color: #c2410c; margin-bottom: 6px; }
+.schedule-proposal-time { font-size: 0.88rem; color: #431407; line-height: 1.6; margin-bottom: 4px; }
+.schedule-pending {
+  background: #f8fafc; border: 1px solid #cbd5e1;
+  border-radius: 8px; padding: 12px 14px; margin: 8px 0;
+}
+.schedule-pending-label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
 .report-uploaded { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; color: #166534; }
 .report-waiting { background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
 .file-selected { font-size: 0.82rem; color: var(--primary); margin-top: 4px; }
