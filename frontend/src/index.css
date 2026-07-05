@@ -1284,3 +1284,153 @@ input, textarea, select { font-family: inherit; }
 .status-accepted  { background: #dbeafe; color: #1e40af; }
 .status-completed { background: #d1fae5; color: #065f46; }
 .status-rejected  { background: #fee2e2; color: #991b1b; }
+
+/* ── 히어로 브랜드 배지 ── */
+.hero-brand-badge {
+  display: inline-block;
+  background: rgba(0,199,174,0.2);
+  border: 1px solid rgba(0,199,174,0.5);
+  color: #00c7ae;
+  font-size: 0.8rem; font-weight: 800; letter-spacing: 0.15em;
+  padding: 5px 14px; border-radius: 99px; margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* ── 울림지기 목록 페이지 ── */
+.ulim-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, #1a2744 60%, #0f2027 100%);
+  padding: 80px 5% 64px;
+  overflow: hidden;
+}
+.ulim-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(0,199,174,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ulim-hero-overlay { display: none; }
+.ulim-hero-content {
+  position: relative; z-index: 1;
+  max-width: 720px; margin: 0 auto; text-align: center;
+}
+.ulim-hero-tag {
+  display: inline-block;
+  background: rgba(0,199,174,0.15); color: #00c7ae;
+  border: 1px solid rgba(0,199,174,0.3);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  padding: 5px 14px; border-radius: 99px; margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.ulim-hero-title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800; color: #f1f5f9; line-height: 1.3; margin-bottom: 12px;
+}
+.ulim-hero-sub {
+  font-size: 1.05rem; color: #94a3b8; margin-bottom: 32px;
+}
+.ulim-hero-stats {
+  display: inline-flex; align-items: center; gap: 24px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 16px 32px;
+}
+.ulim-stat { text-align: center; }
+.ulim-stat strong { display: block; font-size: 1.5rem; font-weight: 800; color: #00c7ae; }
+.ulim-stat span { font-size: 0.78rem; color: #94a3b8; }
+.ulim-stat-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.15); }
+
+/* 필터 영역 */
+.ulim-filter-wrap {
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 20px 5% 12px; position: sticky; top: var(--navbar-h); z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.ulim-filter-inner { display: flex; flex-direction: column; gap: 12px; max-width: 1080px; margin: 0 auto; }
+.ulim-search-wrap {
+  position: relative; display: flex; align-items: center;
+}
+.ulim-search-icon { position: absolute; left: 12px; color: #aaa; flex-shrink: 0; }
+.ulim-search-input {
+  width: 100%; padding: 10px 36px 10px 36px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 0.9rem; background: #f8f9fa;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ulim-search-input:focus { outline: none; border-color: var(--primary); background: #fff; }
+.ulim-search-clear {
+  position: absolute; right: 10px;
+  background: none; border: none; color: #aaa; font-size: 0.8rem; cursor: pointer; padding: 4px;
+}
+.ulim-field-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ulim-field-tag {
+  padding: 5px 14px; border-radius: 99px;
+  border: 1.5px solid var(--border); background: #fff;
+  font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+  transition: all 0.15s; cursor: pointer;
+}
+.ulim-field-tag:hover { border-color: var(--primary); color: var(--primary); }
+.ulim-field-tag.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.ulim-result-count {
+  font-size: 0.82rem; color: var(--text-muted); max-width: 1080px; margin: 4px auto 0;
+}
+.ulim-result-count strong { color: var(--text); }
+
+/* 카드 그리드 */
+.ulim-list-wrap { max-width: 1080px; margin: 0 auto; padding: 40px 5% 60px; }
+.ulim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.ulim-card {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 24px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.ulim-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 32px rgba(0,199,174,0.12);
+  transform: translateY(-3px);
+}
+.ulim-card-top { display: flex; gap: 16px; align-items: flex-start; }
+.ulim-card-avatar { flex-shrink: 0; }
+.ulim-card-meta { flex: 1; min-width: 0; }
+.ulim-card-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.ulim-card-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+.ulim-report-badge {
+  background: #fff7ed; border: 1px solid #fed7aa;
+  color: #c2410c; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px;
+}
+.ulim-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+.ulim-tag {
+  font-size: 0.72rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 99px;
+}
+.ulim-tag-exp { background: #e0f2fe; color: #0369a1; }
+.ulim-tag-field { background: #f0fdf4; color: #166534; }
+.ulim-card-company { font-size: 0.78rem; color: #888; display: flex; align-items: center; gap: 2px; }
+.ulim-card-desc {
+  font-size: 0.85rem; color: #555; line-height: 1.65;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ulim-card-expertise {
+  background: #f8fafc; border-radius: 8px; padding: 10px 12px;
+}
+.ulim-expertise-label { font-size: 0.7rem; font-weight: 700; color: var(--primary); display: block; margin-bottom: 3px; }
+.ulim-expertise-text { font-size: 0.8rem; color: #444; line-height: 1.5; }
+.ulim-card-footer {
+  border-top: 1px solid var(--border); padding-top: 12px; margin-top: auto;
+}
+.ulim-card-cta {
+  font-size: 0.82rem; font-weight: 700; color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .ulim-hero { padding: 56px 5% 48px; }
+  .ulim-hero-stats { flex-direction: column; gap: 12px; }
+  .ulim-stat-divider { width: 40px; height: 1px; }
+  .ulim-grid { grid-template-columns: 1fr; }
+  .ulim-filter-wrap { position: static; }
+}

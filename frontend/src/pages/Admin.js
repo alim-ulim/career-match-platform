@@ -23,7 +23,7 @@ function AdminLogin({ onLogin }) {
   return (
     <div className="admin-login-wrap">
       <div className="admin-login-box">
-        <h2>레퍼로 관리자</h2>
+        <h2>울림 관리자</h2>
         <form onSubmit={handleSubmit}>
           <input type="password" placeholder="관리자 비밀번호" value={pw} onChange={e => setPw(e.target.value)} className="admin-input" />
           {err && <p className="admin-err">{err}</p>}
@@ -34,7 +34,7 @@ function AdminLogin({ onLogin }) {
   );
 }
 
-const ROLE_LABEL = { expert: '레퍼러', seeker: '시커', company: '파트너 기업', admin: '관리자' };
+const ROLE_LABEL = { expert: '울림지기', seeker: '시커', company: '파트너 기업', admin: '관리자' };
 
 const EMPTY_NEW = { name: '', email: '', password: '', role: 'seeker', field: '', currentCompany: '', yearsOfExperience: '', description: '', gender: 'other' };
 
@@ -120,7 +120,7 @@ function UsersTab() {
         <select className="admin-input-sm" value={roleFilter} onChange={e => setRoleFilter(e.target.value)}>
           <option value="all">전체 역할</option>
           <option value="seeker">시커</option>
-          <option value="expert">레퍼러</option>
+          <option value="expert">울림지기</option>
           <option value="company">파트너 기업</option>
           <option value="admin">관리자</option>
         </select>
@@ -135,7 +135,7 @@ function UsersTab() {
             <input className="admin-input-sm" placeholder="비밀번호 *" type="password" value={newData.password} onChange={e => setNewData(d => ({ ...d, password: e.target.value }))} required />
             <select className="admin-input-sm" value={newData.role} onChange={e => setNewData(d => ({ ...d, role: e.target.value }))}>
               <option value="seeker">시커</option>
-              <option value="expert">레퍼러</option>
+              <option value="expert">울림지기</option>
               <option value="company">파트너 기업</option>
             </select>
           </div>
@@ -175,7 +175,7 @@ function UsersTab() {
                     <td>
                       <select className="admin-input-sm" value={editData.role} onChange={e => setEditData(d => ({ ...d, role: e.target.value }))}>
                         <option value="seeker">시커</option>
-                        <option value="expert">레퍼러</option>
+                        <option value="expert">울림지기</option>
                         <option value="company">파트너 기업</option>
                         <option value="admin">관리자</option>
                       </select>
@@ -272,7 +272,7 @@ function ConsultationsTab() {
         <div className="admin-table-scroll">
           <table className="admin-table">
             <thead>
-              <tr><th>신청일</th><th>시커</th><th>레퍼러</th><th>상태</th><th>일정</th><th>리포트</th><th>관리</th></tr>
+              <tr><th>신청일</th><th>시커</th><th>울림지기</th><th>상태</th><th>일정</th><th>리포트</th><th>관리</th></tr>
             </thead>
             <tbody>
               {filtered.map(c => (
@@ -315,7 +315,7 @@ function StatsTab() {
     <div className="admin-stats-grid">
       {[
         { label: '전체 회원', value: stats.totalUsers },
-        { label: '레퍼러', value: stats.totalExperts },
+        { label: '울림지기', value: stats.totalExperts },
         { label: '시커', value: stats.totalSeekers },
         { label: '파트너 기업', value: stats.totalCompanies },
         { label: '전체 상담', value: stats.totalConsultations },
@@ -339,7 +339,7 @@ export default function Admin() {
   return (
     <div className="admin-wrap">
       <div className="admin-header">
-        <h1>레퍼로 관리자</h1>
+        <h1>울림 관리자</h1>
         <button className="admin-logout" onClick={logout}>로그아웃</button>
       </div>
       <div className="admin-tabs">

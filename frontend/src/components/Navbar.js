@@ -18,13 +18,12 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo" onClick={close}>
-        <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
-        <span className="navbar-logo-text">Refer<span className="navbar-logo-plus">+</span>路</span>
+        <img src="/alim-ulim.jpg" alt="울림 로고" onError={e => e.target.style.display = 'none'} />
+        <span className="navbar-logo-text">울림</span>
       </Link>
 
       <div className="navbar-menu">
-        <Link to="/referrers" className="nav-link">레퍼러 찾기</Link>
-        <Link to="/seekers" className="nav-link">시커 찾기</Link>
+        <Link to="/ulimjigi" className="nav-link">울림지기 찾기</Link>
         <Link to="/matching" className="nav-link">매칭 현황</Link>
         {user ? (
           <>
@@ -49,8 +48,7 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="mobile-menu">
-          <Link to="/referrers" className="mobile-link" onClick={close}>레퍼러 찾기</Link>
-          <Link to="/seekers" className="mobile-link" onClick={close}>시커 찾기</Link>
+          <Link to="/ulimjigi" className="mobile-link" onClick={close}>울림지기 찾기</Link>
           <Link to="/matching" className="mobile-link" onClick={close}>매칭 현황</Link>
           {user ? (
             <>

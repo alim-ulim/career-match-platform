@@ -40,8 +40,8 @@ export function Login() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
-          <h1>레퍼로</h1>
+          <img src="/alim-ulim.jpg" alt="울림 로고" onError={e => e.target.style.display = 'none'} />
+          <h1>울림</h1>
         </div>
         <h2 className="auth-title">로그인</h2>
         <form onSubmit={handleSubmit}>
@@ -125,8 +125,8 @@ export function Register() {
     <div className="auth-page">
       <div className="auth-card" style={{ textAlign: 'center' }}>
         <div className="auth-logo" style={{ justifyContent: 'center' }}>
-          <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
-          <h1>레퍼로</h1>
+          <img src="/alim-ulim.jpg" alt="울림 로고" onError={e => e.target.style.display = 'none'} />
+          <h1>울림</h1>
         </div>
         <div style={{ margin: '24px 0 16px' }}>
           <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00c7ae" strokeWidth="1.8" style={{ display: 'block', margin: '0 auto' }}>
@@ -135,7 +135,7 @@ export function Register() {
         </div>
         <h2 style={{ marginBottom: 8 }}>가입 완료!</h2>
         <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
-          <strong>{form.name}</strong>님, 레퍼로에 오신 것을 환영합니다.<br />
+          <strong>{form.name}</strong>님, 울림에 오신 것을 환영합니다.<br />
           지금 바로 로그인하여 서비스를 이용해 보세요.
         </p>
         <Link to="/login" className="btn-outline w-full" style={{ display: 'block', textAlign: 'center' }}>
@@ -149,8 +149,8 @@ export function Register() {
     <div className="auth-page">
       <div className="auth-card auth-card-wide">
         <div className="auth-logo">
-          <img src="/alim-ulim.jpg" alt="레퍼로 로고" onError={e => e.target.style.display = 'none'} />
-          <h1>레퍼로</h1>
+          <img src="/alim-ulim.jpg" alt="울림 로고" onError={e => e.target.style.display = 'none'} />
+          <h1>울림</h1>
         </div>
         <h2 className="auth-title">회원가입</h2>
 
@@ -207,11 +207,11 @@ export function Register() {
                     {
                       value: 'seeker',
                       label: '시커 (Seeker)',
-                      desc: '레퍼러의 컨설팅과 리포트를 받고 싶은 취업·이직·전직 준비자'
+                      desc: '울림지기의 컨설팅과 리포트를 받고 싶은 취업·이직·전직 준비자'
                     },
                     {
                       value: 'expert',
-                      label: '레퍼러 (Referrer)',
+                      label: '울림지기',
                       desc: '전현직 각 분야 전문가 — 시커 1:1 컨설팅 및 커리어 리포트 작성'
                     },
                     {
@@ -284,8 +284,8 @@ export function Register() {
           {step === 3 && form.role === 'expert' && (
             <>
               <div className="guide-profile-notice">
-                <strong>📝 레퍼러 프로필 작성 안내</strong>
-                <p>시커가 레퍼러를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
+                <strong>📝 울림지기 프로필 작성 안내</strong>
+                <p>시커가 울림지기를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
               </div>
 
               <div className="form-group">

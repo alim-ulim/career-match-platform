@@ -27,10 +27,11 @@ function AppRoutes() {
       <main>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/referrers" element={<UserList />} />
-        <Route path="/seekers" element={<UserList />} />
-        <Route path="/guides" element={<Navigate to="/referrers" replace />} />
-        <Route path="/runners" element={<Navigate to="/seekers" replace />} />
+        <Route path="/ulimjigi" element={<UserList />} />
+        <Route path="/referrers" element={<Navigate to="/ulimjigi" replace />} />
+        <Route path="/guides" element={<Navigate to="/ulimjigi" replace />} />
+        <Route path="/seekers" element={<Navigate to="/" replace />} />
+        <Route path="/runners" element={<Navigate to="/" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />

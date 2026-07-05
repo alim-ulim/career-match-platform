@@ -7,50 +7,24 @@ import Toast from '../components/Toast';
 import { useAuth } from '../hooks/useAuth';
 import { AvatarFallback, HandshakeIcon, UserBadgeIcon, GrowthIcon } from '../components/Icons';
 
-const HOW_TO = {
-  seeker: {
-    label: '시커 (Seeker)',
-    color: '#00c7ae',
-    steps: [
-      { num: '01', title: '레퍼러 탐색', desc: '분야·경력별로 등록된 레퍼러를 찾아 프로필과 커리어를 확인합니다.' },
-      { num: '02', title: '컨설팅 신청', desc: '현재 고민하는 커리어 방향이나 전환 목표를 작성해 컨설팅을 신청합니다.' },
-      { num: '03', title: '커리어 리포트 수령', desc: '레퍼러가 1:1 미팅 후 맞춤 커리어 리포트를 작성해 전달합니다.' },
-      { num: '04', title: '기업 추천 신청 (선택)', desc: '리포트를 받은 후, 원하는 경우 파트너 기업 추천을 신청할 수 있습니다.' },
-    ]
-  },
-  referrer: {
-    label: '레퍼러 (Referrer)',
-    color: '#0891b2',
-    steps: [
-      { num: '01', title: '프로필 등록', desc: '현직 경력, 분야, 전문성을 담은 프로필을 등록하고 시커의 컨설팅 요청을 받습니다.' },
-      { num: '02', title: '컨설팅 요청 수락', desc: '시커의 고민과 목표를 확인하고 컨설팅 진행 여부를 결정합니다.' },
-      { num: '03', title: '커리어 리포트 작성', desc: '1:1 미팅 후 시커의 커리어 방향, 전략, 로드맵을 담은 리포트를 작성합니다.' },
-      { num: '04', title: '파트너 기업 추천', desc: '리포트 작성 후 적합한 시커를 파트너 기업 추천 대상으로 등록합니다.' },
-    ]
-  },
-  company: {
-    label: '파트너 기업',
-    color: '#7c3aed',
-    steps: [
-      { num: '01', title: '파트너십 가입', desc: '채용 니즈와 선호 직무를 등록하고 파트너 기업으로 가입합니다.' },
-      { num: '02', title: '시커 탐색', desc: '레퍼러가 직접 검증·추천한 시커 목록과 커리어 리포트를 확인합니다.' },
-      { num: '03', title: '리포트 기반 채용 제안', desc: '커리어 리포트로 검증된 인재에게 면접 또는 채용 제안을 보낼 수 있습니다.' },
-    ]
-  }
-};
+const HOW_TO_STEPS = [
+  { num: '01', title: '울림지기 탐색', desc: '분야·경력별로 등록된 울림지기를 찾아 프로필과 커리어를 확인합니다.' },
+  { num: '02', title: '컨설팅 신청', desc: '지금 고민하는 커리어 방향이나 전환 목표를 작성해 컨설팅을 신청합니다.' },
+  { num: '03', title: '1:1 미팅 & 리포트', desc: '울림지기와 1:1로 만나 진솔한 대화를 나누고, 맞춤 커리어 리포트를 받습니다.' },
+  { num: '04', title: '기업 연결 (선택)', desc: '리포트를 바탕으로 원하는 경우 파트너 기업 추천을 신청할 수 있습니다.' },
+];
 
 export default function Home() {
   const { user } = useAuth();
   const { toast, showToast } = useToast();
-  const [guides, setGuides] = useState([]);
+  const [ulimjigis, setUlimjigis] = useState([]);
   const [consultations, setConsultations] = useState([]);
   const [feeds, setFeeds] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [feedIdx, setFeedIdx] = useState(0);
-  const [activeRole, setActiveRole] = useState('seeker');
 
   useEffect(() => {
-    api.getExperts().then(d => setGuides(Array.isArray(d) ? d : []));
+    api.getExperts().then(d => setUlimjigis(Array.isArray(d) ? d : []));
     api.getConsultations().then(d => setConsultations(Array.isArray(d) ? d : []));
     api.getLiveFeeds().then(d => { if (d.success) setFeeds(d.feeds); });
   }, []);
@@ -74,8 +48,6 @@ export default function Home() {
       .then(() => { showToast('커리어 리포트가 제출되었습니다.'); setSelectedItem(null); });
   };
 
-  const current = HOW_TO[activeRole];
-
   return (
     <div className="page-home">
       <Toast toast={toast} />
@@ -87,15 +59,15 @@ export default function Home() {
         consultations={consultations}
       />
 
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="hero" style={{ backgroundImage: "url('/hero_bg.png')" }}>
         <div className="hero-overlay" />
         <div className="hero-content">
-          <h1 className="hero-title">상담에서 끝나지 않습니다</h1>
+          <div className="hero-brand-badge">울림</div>
+          <h1 className="hero-title">진심은,<br />울림이 됩니다</h1>
           <p className="hero-sub">
-            현직 전문가 레퍼러가 직접 작성한 커리어 리포트가<br />
-            기업의 채용 제안으로 이어집니다.<br />
-            <span style={{ fontSize: '0.9em', opacity: 0.85 }}>취업을 준비하는 이들부터, 커리어 전환을 고민하는 시니어까지.</span>
+            10년 이상 현직에서 쌓은 진짜 경험이<br />
+            당신의 다음 커리어에 확신을 전합니다.
           </p>
 
           {feeds.length > 0 && (
@@ -106,71 +78,45 @@ export default function Home() {
           )}
 
           <div className="hero-btns">
-            <Link to="/referrers" className="btn-hero-primary">레퍼러 찾기</Link>
-            <Link to="/seekers" className="btn-hero-outline">시커 둘러보기</Link>
+            <Link to="/ulimjigi" className="btn-hero-primary">울림지기 찾기</Link>
+            <Link to="/register" className="btn-hero-outline">지금 시작하기</Link>
           </div>
         </div>
       </section>
 
-      {/* 레퍼로 의미 */}
-      <section className="propath-meaning">
-        <div className="meaning-inner">
-          <div className="meaning-logo">레퍼로</div>
-          <div className="meaning-divider" />
-          <div className="meaning-text">
-            <div className="meaning-item">
-              <span className="meaning-word">Refer</span>
-              <span className="meaning-desc">추천하다 — 현직 전문가가 직접 검증하고 추천하는 인재</span>
-            </div>
-            <div className="meaning-item">
-              <span className="meaning-word">로 (路)</span>
-              <span className="meaning-desc">길 · 방향 — 커리어의 올바른 방향과 다음 경로</span>
-            </div>
-          </div>
-          <div className="meaning-divider" />
-          <p className="meaning-tagline">레퍼로는 현직 전문가의 검증된 리포트로 당신의 커리어 다음 경로를 설계합니다.</p>
-        </div>
-      </section>
-
-      {/* 서비스 소개 */}
+      {/* ── 서비스 소개 ── */}
       <section className="about-section">
         <div className="section-header">
-          <h2>레퍼로는 어떤 서비스인가요?</h2>
-          <p>현직 레퍼러의 검증된 리포트로 시커를 파트너 기업과 연결하는 신뢰 기반 플랫폼</p>
+          <h2>울림은 어떤 서비스인가요?</h2>
+          <p>조언이 아닌 진심. 울림지기의 검증된 리포트로 커리어의 다음 경로를 설계합니다.</p>
         </div>
         <div className="about-grid">
           <div className="about-card">
-            <div className="about-icon-wrap">
-              <HandshakeIcon size={36} color="#00c7ae" />
-            </div>
+            <div className="about-icon-wrap"><HandshakeIcon size={36} color="#00c7ae" /></div>
             <h3>상담이 아닌 결과물</h3>
-            <p>세션이 끝나면 사라지는 조언이 아닙니다. 레퍼러가 작성한 커리어 리포트라는 문서화된 결과물이 남고, 그것이 채용 제안으로 이어집니다.</p>
+            <p>세션이 끝나면 사라지는 조언이 아닙니다. 울림지기가 작성한 커리어 리포트가 문서로 남고, 그것이 기업의 채용 제안으로 이어집니다.</p>
           </div>
           <div className="about-card">
-            <div className="about-icon-wrap">
-              <UserBadgeIcon size={36} color="#00c7ae" />
-            </div>
-            <h3>레퍼러 (Referrer)</h3>
-            <p>전현직 각 분야 전문가로, 엄격한 기준으로 선정된 소수 정예입니다. 시커의 고민을 1:1로 듣고 맞춤형 커리어 리포트로 다음 방향을 제시합니다.</p>
+            <div className="about-icon-wrap"><UserBadgeIcon size={36} color="#00c7ae" /></div>
+            <h3>울림지기</h3>
+            <p>10년 이상 현직에서 쌓은 경험을 나누는 사람들. 조언이 아니라 진심을 전합니다. 엄선된 기준으로 선정된 소수 정예 전문가입니다.</p>
           </div>
           <div className="about-card">
-            <div className="about-icon-wrap">
-              <GrowthIcon size={36} color="#00c7ae" />
-            </div>
-            <h3>시커 (Seeker)</h3>
-            <p>더 나은 커리어를 찾는 모든 인재입니다. 주니어 취업 준비생부터 커리어 전환을 고민하는 시니어까지, 레퍼러의 리포트로 다음 경로를 확인합니다.</p>
+            <div className="about-icon-wrap"><GrowthIcon size={36} color="#00c7ae" /></div>
+            <h3>전 연령·전 직군</h3>
+            <p>취업을 준비하는 이들부터 커리어 전환을 고민하는 시니어까지. 주니어부터 시니어까지, 모든 커리어 고민에 울림이 함께합니다.</p>
           </div>
         </div>
       </section>
 
-      {/* 소수 정예 레퍼러 프레이밍 */}
+      {/* ── 소수 정예 울림지기 ── */}
       <section className="elite-section">
         <div className="elite-inner">
-          <div className="elite-badge">레퍼러 선정 기준</div>
-          <h2 className="elite-title">레퍼로의 레퍼러는 아무나 될 수 없습니다</h2>
+          <div className="elite-badge">울림지기 선정 기준</div>
+          <h2 className="elite-title">울림지기는 아무나 될 수 없습니다</h2>
           <p className="elite-desc">
-            현직 경험과 실제 대면 컨설팅 역량을 기준으로 엄선합니다.<br />
-            숫자가 적은 이유는 이유가 있습니다 — 그것이 레퍼로의 신뢰입니다.
+            10년 이상 현직에서 쌓은 경험과 실제 대면 컨설팅 역량을 기준으로 엄선합니다.<br />
+            숫자가 적은 이유는 이유가 있습니다 — 그것이 울림의 신뢰입니다.
           </p>
           <div className="elite-criteria">
             <div className="elite-item">
@@ -184,7 +130,7 @@ export default function Home() {
               <span className="elite-icon">✦</span>
               <div>
                 <strong>1:1 대면 컨설팅 역량</strong>
-                <p>단순 조언이 아닌 구체적 리포트를 작성할 수 있는 역량</p>
+                <p>단순 조언이 아닌 구체적인 커리어 리포트를 작성할 수 있는 역량</p>
               </div>
             </div>
             <div className="elite-item">
@@ -195,18 +141,36 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <Link to="/referrers" className="btn-primary elite-cta">레퍼러 살펴보기 →</Link>
+          <Link to="/ulimjigi" className="btn-primary elite-cta">울림지기 살펴보기 →</Link>
         </div>
       </section>
 
-      {/* 플랫폼 구조 */}
+      {/* ── 이용 방법 ── */}
+      <section className="steps-section">
+        <div className="section-header">
+          <h2>울림 이용 방법</h2>
+          <p>울림지기와 함께하는 4단계 커리어 여정</p>
+        </div>
+        <div className="role-steps">
+          {HOW_TO_STEPS.map((s, i) => (
+            <React.Fragment key={s.num}>
+              <div className="role-step-card">
+                <div className="role-step-num" style={{ background: '#00c7ae' }}>{s.num}</div>
+                <h4>{s.title}</h4>
+                <p>{s.desc}</p>
+              </div>
+              {i < HOW_TO_STEPS.length - 1 && <div className="role-step-arrow">→</div>}
+            </React.Fragment>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 플랫폼 구조 ── */}
       <section className="ecosystem-section">
         <div className="section-header">
-          <h2>레퍼로 플랫폼 구조</h2>
+          <h2>울림 플랫폼 구조</h2>
           <p>세 참여자가 서로 연결되어 가치를 나누는 신뢰 기반 에코시스템</p>
         </div>
-
-        {/* 관계 흐름도 */}
         <div className="ecosystem-flow">
           <div className="eco-node eco-runner">
             <div className="eco-node-icon">🏃</div>
@@ -229,13 +193,13 @@ export default function Home() {
                   <path d="M60 8 H8" stroke="#0891b2" strokeWidth="2" strokeLinecap="round"/>
                   <path d="M12 3 L2 8 L12 13" stroke="#0891b2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 </svg>
-                <span className="eco-arrow-label">커리어 방향 수립</span>
+                <span className="eco-arrow-label">커리어 리포트</span>
               </div>
             </div>
           </div>
           <div className="eco-node eco-guide">
             <div className="eco-node-icon">🎯</div>
-            <div className="eco-node-label">레퍼러</div>
+            <div className="eco-node-label">울림지기</div>
             <div className="eco-node-sub">전현직 각 분야 전문가</div>
           </div>
           <div className="eco-arrow-block">
@@ -265,15 +229,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 역할별 장점 카드 */}
         <div className="benefit-grid">
           <div className="benefit-card benefit-runner">
             <div className="benefit-card-header">
-              <span className="benefit-badge" style={{ background: '#00c7ae' }}>시커 (Seeker)</span>
+              <span className="benefit-badge" style={{ background: '#00c7ae' }}>시커</span>
               <h3>내 커리어의 방향을 찾다</h3>
             </div>
             <ul className="benefit-list">
-              <li><span className="benefit-check">✓</span>검증된 레퍼러의 맞춤형 1:1 조언</li>
+              <li><span className="benefit-check">✓</span>울림지기의 맞춤형 1:1 진심 어린 조언</li>
               <li><span className="benefit-check">✓</span>나만의 커리어 리포트로 강점·방향 정립</li>
               <li><span className="benefit-check">✓</span>파트너 기업 채용 시 대상 후보자 등록 가능</li>
               <li><span className="benefit-check">✓</span>채용 공고 지원이 아닌, 기업이 먼저 제안하는 경험</li>
@@ -281,8 +244,8 @@ export default function Home() {
           </div>
           <div className="benefit-card benefit-guide">
             <div className="benefit-card-header">
-              <span className="benefit-badge" style={{ background: '#0891b2' }}>레퍼러 (Referrer)</span>
-              <h3>전문성을 사회에 환원하다</h3>
+              <span className="benefit-badge" style={{ background: '#0891b2' }}>울림지기</span>
+              <h3>진심을 사회에 전하다</h3>
             </div>
             <ul className="benefit-list">
               <li><span className="benefit-check">✓</span>현직 경험을 활용해 후배를 실질적으로 돕는 기회</li>
@@ -296,58 +259,23 @@ export default function Home() {
               <h3>검증된 인재와 연결되다</h3>
             </div>
             <ul className="benefit-list">
-              <li><span className="benefit-check">✓</span>레퍼러가 검증·추천한 인재만 열람</li>
+              <li><span className="benefit-check">✓</span>울림지기가 검증·추천한 인재만 열람</li>
               <li><span className="benefit-check">✓</span>전문가가 직접 대면한 인재 추천 가능</li>
               <li><span className="benefit-check">✓</span>합리적인 비용으로 최적의 인재 채용 가능</li>
             </ul>
           </div>
         </div>
-
       </section>
 
-      {/* 이용 방법 — 역할별 탭 */}
-      <section className="steps-section">
-        <div className="section-header">
-          <h2>레퍼로 이용 방법</h2>
-          <p>역할에 따라 레퍼로를 이용하는 방법이 다릅니다</p>
-        </div>
-
-        <div className="role-tabs">
-          {Object.entries(HOW_TO).map(([key, val]) => (
-            <button
-              key={key}
-              className={`role-tab ${activeRole === key ? 'active' : ''}`}
-              style={activeRole === key ? { borderColor: val.color, color: val.color } : {}}
-              onClick={() => setActiveRole(key)}
-            >
-              {val.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="role-steps">
-          {current.steps.map((s, i) => (
-            <React.Fragment key={s.num}>
-              <div className="role-step-card">
-                <div className="role-step-num" style={{ background: current.color }}>{s.num}</div>
-                <h4>{s.title}</h4>
-                <p>{s.desc}</p>
-              </div>
-              {i < current.steps.length - 1 && <div className="role-step-arrow">→</div>}
-            </React.Fragment>
-          ))}
-        </div>
-      </section>
-
-      {/* 레퍼러 미리보기 */}
-      {guides.length > 0 && (
+      {/* ── 울림지기 미리보기 ── */}
+      {ulimjigis.length > 0 && (
         <section className="list-preview-section">
           <div className="section-header">
-            <h2>검증된 레퍼러를 만나보세요</h2>
-            <Link to="/referrers" className="see-all">전체보기 →</Link>
+            <h2>지금 활동 중인 울림지기</h2>
+            <Link to="/ulimjigi" className="see-all">전체보기 →</Link>
           </div>
           <div className="card-grid-home">
-            {guides.slice(0, 4).map(item => (
+            {ulimjigis.slice(0, 4).map(item => (
               <div key={item._id} className="guide-card" onClick={() => setSelectedItem(item)}>
                 <div className="guide-card-avatar">
                   <AvatarFallback name={item.name} size={80} gender={item.gender} />

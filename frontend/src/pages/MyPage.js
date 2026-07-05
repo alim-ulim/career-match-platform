@@ -57,7 +57,7 @@ function MessageThread({ messages, myRole, myName, onSend }) {
   );
 }
 
-// ── 일정 제안 폼 (레퍼러 or 시커) ─────────────────────
+// ── 일정 제안 폼 (울림지기 or 시커) ─────────────────────
 function ScheduleForm({ consultationId, proposedBy, onSubmit, onCancel, existingNote }) {
   const [scheduledAt, setScheduledAt] = useState('');
   const [scheduleNote, setScheduleNote] = useState(existingNote || '');
@@ -86,7 +86,7 @@ function ScheduleForm({ consultationId, proposedBy, onSubmit, onCancel, existing
   );
 }
 
-// ── PDF 리포트 업로드 (레퍼러) ────────────────────────
+// ── PDF 리포트 업로드 (울림지기) ────────────────────────
 function ReportUpload({ consultationId, onSubmit, onCancel }) {
   const [file, setFile] = useState(null);
   const [isRecommended, setIsRecommended] = useState(false);
@@ -151,14 +151,14 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
         <div className="consult-meta">
           {isGuide
             ? <><strong>{m.senderName}</strong>님의 컨설팅 요청</>
-            : <>레퍼러 <strong>{m.expertName}</strong>에게 컨설팅 신청</>
+            : <>울림지기 <strong>{m.expertName}</strong>에게 컨설팅 신청</>
           }
           <StatusBadge status={m.status} />
         </div>
         <p className="consult-msg">{m.message}</p>
       </div>
 
-      {/* ── 레퍼러 뷰 ── */}
+      {/* ── 울림지기 뷰 ── */}
       {isGuide && m.status === 'requested' && (
         <div className="consult-actions">
           <button className="btn-accept" onClick={() => onAccept(m._id)}>수락하기</button>
@@ -266,8 +266,8 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {/* 메시지 */}
           <div className="flow-step-label">
             <span className={`flow-dot ${hasMessages ? 'active' : ''}`} />
-            <strong>레퍼러와 메시지</strong>
-            {!hasMessages && <span className="flow-hint">레퍼러가 메시지를 보내면 여기에 표시됩니다.</span>}
+            <strong>울림지기와 메시지</strong>
+            {!hasMessages && <span className="flow-hint">울림지기가 메시지를 보내면 여기에 표시됩니다.</span>}
           </div>
           {hasMessages && (
             <MessageThread
@@ -281,7 +281,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {/* 일정 */}
           {hasSchedule && theirProposal && !showScheduleForm && (
             <div className="schedule-proposal">
-              <div className="schedule-proposal-label">📅 레퍼러가 컨설팅 일정을 제안했습니다</div>
+              <div className="schedule-proposal-label">📅 울림지기가 컨설팅 일정을 제안했습니다</div>
               <div className="schedule-proposal-time">
                 <strong>{new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}</strong>
                 {m.scheduleNote && <><br />{m.scheduleNote}</>}
@@ -294,7 +294,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           )}
           {hasSchedule && myProposal && !showScheduleForm && (
             <div className="schedule-pending">
-              <div className="schedule-pending-label">⏳ 레퍼러의 수락을 기다리고 있습니다</div>
+              <div className="schedule-pending-label">⏳ 울림지기의 수락을 기다리고 있습니다</div>
               <div className="schedule-proposal-time">
                 📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
                 {m.scheduleNote && <span> — {m.scheduleNote}</span>}
@@ -322,8 +322,8 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {!hasReport && (
             <div className="report-waiting">
               {scheduleConfirmed
-                ? '컨설팅 미팅 후 레퍼러가 커리어 리포트 PDF를 업로드하면 여기서 다운로드할 수 있습니다.'
-                : '레퍼러가 일정을 제안하면 안내됩니다.'}
+                ? '컨설팅 미팅 후 울림지기가 커리어 리포트 PDF를 업로드하면 여기서 다운로드할 수 있습니다.'
+                : '울림지기가 일정을 제안하면 안내됩니다.'}
             </div>
           )}
         </div>
@@ -333,7 +333,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
         <div className="report-download-box">
           <div className="report-download-title">📄 커리어 리포트가 도착했습니다</div>
           <p className="report-download-sub">
-            레퍼러 <strong>{m.expertName}</strong>님이 작성한 커리어 리포트입니다.
+            울림지기 <strong>{m.expertName}</strong>님이 작성한 커리어 리포트입니다.
             {m.reportUploadedAt && ` (${new Date(m.reportUploadedAt).toLocaleDateString('ko')} 전달)`}
           </p>
           <a
@@ -358,7 +358,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
       )}
 
       {isRunner && m.status === 'rejected' && (
-        <div className="consult-rejected">이번 컨설팅 요청을 레퍼러가 거절했습니다.</div>
+        <div className="consult-rejected">이번 컨설팅 요청을 울림지기가 거절했습니다.</div>
       )}
     </div>
   );
@@ -396,7 +396,7 @@ export default function MyPage() {
   );
 
   const roleLabel = () => {
-    if (user.role === 'expert') return `레퍼러 (Referrer)${user.yearsOfExperience ? ` · 경력 ${user.yearsOfExperience}년` : ''}`;
+    if (user.role === 'expert') return `울림지기${user.yearsOfExperience ? ` · 경력 ${user.yearsOfExperience}년` : ''}`;
     if (user.role === 'company') return `파트너 기업 담당자 · ${user.companyName || ''}`;
     return '시커 (Seeker)';
   };
@@ -462,7 +462,7 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 레퍼러 상세 경력 */}
+        {/* 울림지기 상세 경력 */}
         {user.role === 'expert' && (user.careerHistory || user.consultationExpertise) && (
           <div className="guide-detail-card">
             {user.careerHistory && (
