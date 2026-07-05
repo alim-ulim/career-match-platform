@@ -90,27 +90,19 @@ const ConsultationSchema = new mongoose.Schema({
   consultationType: { type: String, default: '취업준비' },
   status: { type: String, enum: ['requested', 'accepted', 'rejected', 'completed'], default: 'requested' },
   createdAt: { type: Date, default: Date.now },
-  // 사전 인터뷰 (러너 작성)
-  preInterview: {
-    currentSituation: String,
-    concerns: String,
-    goals: String,
-    specificQuestions: String,
-    submittedAt: Date
-  },
+  // 메시지 스레드 (가이드 ↔ 러너)
+  messages: [{
+    sender: { type: String, enum: ['guide', 'runner'] },
+    senderName: String,
+    text: String,
+    createdAt: { type: Date, default: Date.now }
+  }],
   // 컨설팅 일정
   scheduledAt: Date,
   scheduleNote: String,
-  // 커리어 리포트 (가이드 작성, 러너에게 공개)
-  report: {
-    direction: String,
-    strengths: String,
-    developments: String,
-    actionPlan: String,
-    isRecommended: { type: Boolean, default: false },
-    recommendedRoles: { type: [String], default: [] },
-    createdAt: Date
-  },
+  // 커리어 리포트 PDF (가이드 업로드)
+  reportFile: String,
+  reportUploadedAt: Date,
   // legacy 평가 필드 (하위호환)
   evaluation: {
     rating: Number,
@@ -301,6 +293,11 @@ MockConsultation.countDocuments = async (query) => {
     list = list.filter(c => c.evaluation && c.evaluation.isHighlyRecommended === val);
   }
   return list.length;
+};
+
+MockConsultation.findById = async (id) => {
+  const found = fallbackConsultations.find(c => String(c._id) === String(id));
+  return found ? new MockConsultation(found) : null;
 };
 
 MockConsultation.findByIdAndUpdate = async (id, update, options) => {
@@ -660,17 +657,18 @@ function maskName(name) {
   return name[0] + '*'.repeat(Math.max(name.length - 1, 1));
 }
 
-// 사전 인터뷰 제출 (러너)
-app.patch('/api/consultations/:id/pre-interview', async (req, res) => {
+// 메시지 전송 (가이드 또는 러너)
+app.post('/api/consultations/:id/messages', async (req, res) => {
   try {
-    const { currentSituation, concerns, goals, specificQuestions } = req.body;
-    const consultation = await Consultation.findByIdAndUpdate(
-      req.params.id,
-      { preInterview: { currentSituation, concerns, goals, specificQuestions, submittedAt: new Date() } },
-      { new: true }
-    );
+    const { sender, senderName, text } = req.body;
+    if (!text || !text.trim()) return res.status(400).json({ success: false, error: '메시지 내용을 입력해 주세요.' });
+
+    const consultation = await Consultation.findById(req.params.id);
     if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
-    res.json({ success: true, consultation });
+
+    const messages = [...(consultation.messages || []), { sender, senderName, text: text.trim(), createdAt: new Date() }];
+    const updated = await Consultation.findByIdAndUpdate(req.params.id, { messages }, { new: true });
+    res.json({ success: true, consultation: updated });
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
@@ -688,28 +686,14 @@ app.patch('/api/consultations/:id/schedule', async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
-// 커리어 리포트 작성 (가이드 → 러너 공개)
-app.patch('/api/consultations/:id/report', async (req, res) => {
+// 커리어 리포트 PDF 업로드 (가이드 → 러너 공개, 상태 completed)
+app.post('/api/consultations/:id/report-file', upload.single('reportFile'), async (req, res) => {
   try {
-    const { direction, strengths, developments, actionPlan, isRecommended, recommendedRoles } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, error: 'PDF 파일을 선택해 주세요.' });
+    const filePath = `/uploads/${req.file.filename}`;
     const consultation = await Consultation.findByIdAndUpdate(
       req.params.id,
-      {
-        status: 'completed',
-        report: {
-          direction, strengths, developments, actionPlan,
-          isRecommended: isRecommended === true || isRecommended === 'true',
-          recommendedRoles: recommendedRoles || [],
-          createdAt: new Date()
-        },
-        // legacy 호환
-        evaluation: {
-          recommendation: direction,
-          isHighlyRecommended: isRecommended === true || isRecommended === 'true',
-          recommendedRoles: recommendedRoles || [],
-          createdAt: new Date()
-        }
-      },
+      { status: 'completed', reportFile: filePath, reportUploadedAt: new Date() },
       { new: true }
     );
     if (!consultation) return res.status(404).json({ success: false, error: '상담을 찾을 수 없습니다.' });
