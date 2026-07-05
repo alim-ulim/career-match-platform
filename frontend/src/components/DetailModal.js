@@ -19,9 +19,9 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
 
   const roleLabel = () => {
     if (isConsultation) return '커리어 컨설팅 요청';
-    if (item.role === 'expert') return '커리어 가이드 (Career Guide)';
+    if (item.role === 'expert') return '울림지기 (Ulimjigi)';
     if (item.role === 'company') return '파트너 기업 담당자';
-    return '커리어 러너 (Career Runner)';
+    return '시커 (Seeker)';
   };
 
   const handleSend = async () => {
@@ -74,7 +74,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                     .filter(c => c.senderId === item._id && c.status === 'completed' && c.evaluation)
                     .map(ev => (
                       <div key={ev._id} className="eval-item">
-                        <strong>커리어 가이드: {ev.expertName} (★{ev.evaluation.rating})</strong>
+                        <strong>울림지기: {ev.expertName} (★{ev.evaluation.rating})</strong>
                         <p>강점: {ev.evaluation.pros}</p>
                         <p className="eval-rec">종합 의견: "{ev.evaluation.recommendation}"</p>
                         {ev.evaluation.isHighlyRecommended && (
@@ -106,7 +106,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                 </div>
               )}
 
-              {/* 커리어 가이드: 리포트 작성 폼 */}
+              {/* 울림지기: 리포트 작성 폼 */}
               {isConsultation && user?.role === 'expert' && item.status === 'accepted' && !item.evaluation && (
                 <div className="eval-form">
                   <h4 className="section-label">커리어 리포트 작성</h4>
@@ -123,7 +123,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                   </select>
                   <input className="form-input mt-8" placeholder="강점 (Strengths)" onChange={e => setEvalData({ ...evalData, pros: e.target.value })} />
                   <input className="form-input mt-8" placeholder="보완점 (Areas for Improvement)" onChange={e => setEvalData({ ...evalData, cons: e.target.value })} />
-                  <textarea className="form-input form-textarea mt-8" placeholder="종합 커리어 조언 및 로드맵 (커리어 러너에게 전달됩니다)" onChange={e => setEvalData({ ...evalData, recommendation: e.target.value })} />
+                  <textarea className="form-input form-textarea mt-8" placeholder="종합 커리어 조언 및 로드맵 (시커에게 전달됩니다)" onChange={e => setEvalData({ ...evalData, recommendation: e.target.value })} />
                   <input className="form-input mt-8" placeholder="추천 직무 (예: PM, 마케터, 개발자 — 쉼표로 구분)" onChange={e => setEvalData({ ...evalData, recommendedRoles: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
                   <label className="checkbox-label mt-8">
                     <input
@@ -131,7 +131,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                       checked={evalData.isHighlyRecommended}
                       onChange={e => setEvalData({ ...evalData, isHighlyRecommended: e.target.checked })}
                     />
-                    이 커리어 러너를 파트너 기업 추천 대상으로 등록합니다
+                    이 시커를 파트너 기업 추천 대상으로 등록합니다
                   </label>
                   <button className="btn-primary w-full mt-8" onClick={() => onEvaluate(item._id, evalData)}>
                     커리어 리포트 제출 및 컨설팅 완료
@@ -159,10 +159,10 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
 
         {step === 'form' && (
           <div className="modal-body text-center">
-            <h3>커리어 가이드에게 컨설팅 신청</h3>
+            <h3>울림지기에게 컨설팅 신청</h3>
             <p className="hint" style={{ marginTop: 8 }}>
               현재 겪고 있는 커리어 고민이나 목표를 구체적으로 작성해 주세요.<br />
-              커리어 가이드가 맞춤형 커리어 리포트를 작성해 드립니다.
+              울림지기가 맞춤형 커리어 리포트를 작성해 드립니다.
             </p>
             <input
               className="form-input mt-8"
@@ -192,7 +192,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
             </div>
             <h2 style={{ marginTop: 12 }}>신청 완료</h2>
             <p className="hint" style={{ marginTop: 8 }}>
-              커리어 가이드에게 컨설팅 신청이 전달되었습니다.<br />
+              울림지기에게 컨설팅 신청이 전달되었습니다.<br />
               마이페이지에서 진행 상황을 확인하세요.
             </p>
             <button className="btn-primary w-full mt-16" onClick={onClose}>확인</button>

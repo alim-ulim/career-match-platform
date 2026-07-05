@@ -46,10 +46,10 @@ export default function MatchingStatus() {
                   </div>
                   <div className="matching-card-body">
                     <div className="matching-names">
-                      <span className="matching-role runner">커리어 러너</span>
+                      <span className="matching-role runner">시커</span>
                       <strong>{item.senderName}</strong>
                       <span className="matching-arrow">→</span>
-                      <span className="matching-role guide">커리어 가이드</span>
+                      <span className="matching-role guide">울림지기</span>
                       <strong>{item.expertName}</strong>
                     </div>
                     <div className="matching-meta">
