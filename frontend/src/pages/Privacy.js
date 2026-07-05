@@ -15,7 +15,7 @@ export default function Privacy() {
         <section>
           <h2>1. 수집하는 개인정보 항목</h2>
           <ul>
-            <li><strong>필수:</strong> 이메일 주소, 비밀번호, 이름, 회원 유형(울림지기/시커/파트너 기업)</li>
+            <li><strong>필수:</strong> 이메일 주소, 비밀번호, 이름, 회원 유형(울림지기/이용자/파트너 기업)</li>
             <li><strong>선택:</strong> 연락처, 분야/직무, 현직 기업명, 경력 연차, 프로필 사진, 이력서, 한줄 소개</li>
             <li><strong>자동 수집:</strong> 서비스 이용 기록, 접속 IP, 쿠키</li>
           </ul>

@@ -101,7 +101,7 @@ function ReportUpload({ consultationId, onSubmit, onCancel }) {
   return (
     <form className="flow-form" onSubmit={handleSubmit}>
       <div className="flow-form-title">📎 커리어 리포트 업로드</div>
-      <p className="flow-form-desc">컨설팅 후 작성한 커리어 리포트 PDF 파일을 업로드해 주세요.<br />업로드 즉시 시커에게 공개됩니다.</p>
+      <p className="flow-form-desc">컨설팅 후 작성한 커리어 리포트 PDF 파일을 업로드해 주세요.<br />업로드 즉시 이용자에게 공개됩니다.</p>
       <div className="form-group">
         <label>리포트 PDF 파일 *</label>
         <input type="file" accept=".pdf" onChange={e => setFile(e.target.files[0])} required />
@@ -110,7 +110,7 @@ function ReportUpload({ consultationId, onSubmit, onCancel }) {
       <div className="form-group">
         <label className="check-label">
           <input type="checkbox" checked={isRecommended} onChange={e => setIsRecommended(e.target.checked)} />
-          이 시커를 파트너 기업 채용 후보자로 추천합니다
+          이 이용자를 파트너 기업 채용 후보자로 추천합니다
         </label>
       </div>
       <div className="row-gap mt-16">
@@ -171,7 +171,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {/* Step 1: 메시지 */}
           <div className="flow-step-label">
             <span className={`flow-dot ${hasMessages ? 'done' : 'active'}`} />
-            <strong>1단계</strong> — 시커에게 메시지 보내기
+            <strong>1단계</strong> — 이용자에게 메시지 보내기
             {!hasMessages && <span className="flow-hint">커리어 고민, 이력 등을 요청하는 메시지를 보내세요.</span>}
           </div>
           <MessageThread
@@ -192,7 +192,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {/* 러너가 역제안한 경우: 가이드가 수락 or 재제안 */}
           {hasSchedule && theirProposal && !showScheduleForm && (
             <div className="schedule-proposal">
-              <div className="schedule-proposal-label">🔔 시커가 일정을 역제안했습니다</div>
+              <div className="schedule-proposal-label">🔔 이용자가 일정을 역제안했습니다</div>
               <div className="schedule-proposal-time">
                 📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
                 {m.scheduleNote && <span> — {m.scheduleNote}</span>}
@@ -206,7 +206,7 @@ function ConsultationCard({ m, user, onAccept, onReject, onMessage, onSchedule, 
           {/* 가이드가 제안 후 러너 수락 대기 중 */}
           {hasSchedule && myProposal && !showScheduleForm && (
             <div className="schedule-pending">
-              <div className="schedule-pending-label">⏳ 시커의 수락을 기다리고 있습니다</div>
+              <div className="schedule-pending-label">⏳ 이용자의 수락을 기다리고 있습니다</div>
               <div className="schedule-proposal-time">
                 📅 {new Date(m.scheduledAt).toLocaleString('ko', { dateStyle: 'long', timeStyle: 'short' })}
                 {m.scheduleNote && <span> — {m.scheduleNote}</span>}
@@ -398,7 +398,7 @@ export default function MyPage() {
   const roleLabel = () => {
     if (user.role === 'expert') return `울림지기${user.yearsOfExperience ? ` · 경력 ${user.yearsOfExperience}년` : ''}`;
     if (user.role === 'company') return `파트너 기업 담당자 · ${user.companyName || ''}`;
-    return '시커 (Seeker)';
+    return '이용자';
   };
 
   const handleAccept = async id => {
@@ -540,7 +540,7 @@ export default function MyPage() {
         {/* 컨설팅 내역 */}
         <div className="consultation-section">
           <h3>
-            {user.role === 'expert' ? '받은 컨설팅 요청' : user.role === 'company' ? '추천받은 시커' : '내 컨설팅 내역'}
+            {user.role === 'expert' ? '받은 컨설팅 요청' : user.role === 'company' ? '추천받은 회원' : '내 컨설팅 내역'}
             <span className="count-badge">{myConsultations.length}</span>
           </h3>
           {myConsultations.length === 0 ? (

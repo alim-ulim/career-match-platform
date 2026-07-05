@@ -206,13 +206,13 @@ export function Register() {
                   {[
                     {
                       value: 'seeker',
-                      label: '시커 (Seeker)',
+                      label: '이용자',
                       desc: '울림지기의 컨설팅과 리포트를 받고 싶은 취업·이직·전직 준비자'
                     },
                     {
                       value: 'expert',
                       label: '울림지기',
-                      desc: '전현직 각 분야 전문가 — 시커 1:1 컨설팅 및 커리어 리포트 작성'
+                      desc: '전현직 각 분야 전문가 — 1:1 컨설팅 및 커리어 리포트 작성'
                     },
                     {
                       value: 'company',
@@ -285,7 +285,7 @@ export function Register() {
             <>
               <div className="guide-profile-notice">
                 <strong>📝 울림지기 프로필 작성 안내</strong>
-                <p>시커가 울림지기를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
+                <p>이용자가 울림지기를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
               </div>
 
               <div className="form-group">
@@ -314,7 +314,7 @@ export function Register() {
               <div className="form-group">
                 <label>컨설팅 가능 분야 *</label>
                 <div className="form-hint">
-                  어떤 커리어 고민을 가진 시커에게 도움을 줄 수 있는지 구체적으로 작성해 주세요.
+                  어떤 커리어 고민을 가진 분들에게 도움을 줄 수 있는지 구체적으로 작성해 주세요.
                 </div>
                 <textarea className="form-input form-textarea"
                   placeholder={"- 마케팅/기획 직군 취업·이직 전략\n- 대기업 → 스타트업 커리어 전환 상담\n- 팀장·임원급으로의 승진 로드맵\n- 포트폴리오 및 자기소개서 방향성"}

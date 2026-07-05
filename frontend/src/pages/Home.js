@@ -174,7 +174,7 @@ export default function Home() {
         <div className="ecosystem-flow">
           <div className="eco-node eco-runner">
             <div className="eco-node-icon">🏃</div>
-            <div className="eco-node-label">시커</div>
+            <div className="eco-node-label">이용자</div>
             <div className="eco-node-sub">커리어 방향을 찾는 인재</div>
           </div>
           <div className="eco-arrow-block">
@@ -232,7 +232,7 @@ export default function Home() {
         <div className="benefit-grid">
           <div className="benefit-card benefit-runner">
             <div className="benefit-card-header">
-              <span className="benefit-badge" style={{ background: '#00c7ae' }}>시커</span>
+              <span className="benefit-badge" style={{ background: '#00c7ae' }}>이용자</span>
               <h3>내 커리어의 방향을 찾다</h3>
             </div>
             <ul className="benefit-list">

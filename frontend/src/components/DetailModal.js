@@ -21,7 +21,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
     if (isConsultation) return '커리어 컨설팅 요청';
     if (item.role === 'expert') return '울림지기 (Ulimjigi)';
     if (item.role === 'company') return '파트너 기업 담당자';
-    return '시커 (Seeker)';
+    return '이용자';
   };
 
   const handleSend = async () => {
@@ -123,7 +123,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                   </select>
                   <input className="form-input mt-8" placeholder="강점 (Strengths)" onChange={e => setEvalData({ ...evalData, pros: e.target.value })} />
                   <input className="form-input mt-8" placeholder="보완점 (Areas for Improvement)" onChange={e => setEvalData({ ...evalData, cons: e.target.value })} />
-                  <textarea className="form-input form-textarea mt-8" placeholder="종합 커리어 조언 및 로드맵 (시커에게 전달됩니다)" onChange={e => setEvalData({ ...evalData, recommendation: e.target.value })} />
+                  <textarea className="form-input form-textarea mt-8" placeholder="종합 커리어 조언 및 로드맵 (이용자에게 전달됩니다)" onChange={e => setEvalData({ ...evalData, recommendation: e.target.value })} />
                   <input className="form-input mt-8" placeholder="추천 직무 (예: PM, 마케터, 개발자 — 쉼표로 구분)" onChange={e => setEvalData({ ...evalData, recommendedRoles: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
                   <label className="checkbox-label mt-8">
                     <input
@@ -131,7 +131,7 @@ export default function DetailModal({ item, onClose, onSend, onEvaluate, onAccep
                       checked={evalData.isHighlyRecommended}
                       onChange={e => setEvalData({ ...evalData, isHighlyRecommended: e.target.checked })}
                     />
-                    이 시커를 파트너 기업 추천 대상으로 등록합니다
+                    이 회원을 파트너 기업 추천 대상으로 등록합니다
                   </label>
                   <button className="btn-primary w-full mt-8" onClick={() => onEvaluate(item._id, evalData)}>
                     커리어 리포트 제출 및 컨설팅 완료
