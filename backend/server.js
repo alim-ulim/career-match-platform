@@ -72,11 +72,43 @@ const UserSchema = new mongoose.Schema({
   emailVerifyToken: { type: String, default: '' },
   emailVerifyExpires: { type: Date },
   gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' },
-  // 커리어 가이드 상세 경력
+  // 레거시 자유텍스트 경력 (하위 호환)
   careerHistory: { type: String, default: '' },
   achievements: { type: String, default: '' },
   consultationExpertise: { type: String, default: '' },
-  consultationStyle: { type: String, default: '' }
+  consultationStyle: { type: String, default: '' },
+  // 구조화된 경력 (울림지기)
+  currentTitle: { type: String, default: '' },
+  careerItems: { type: [{
+    companyName: String,
+    department: String,
+    position: String,
+    startYear: Number,
+    startMonth: Number,
+    endYear: Number,
+    endMonth: Number,
+    isCurrent: { type: Boolean, default: false },
+    responsibilities: String,
+    keyAchievements: String,
+  }], default: [] },
+  // 전문성 증빙
+  certifications: { type: [String], default: [] },
+  education: { type: [{
+    school: String,
+    major: String,
+    degree: { type: String, enum: ['학사', '석사', '박사', '기타'], default: '학사' },
+    graduationYear: Number,
+  }], default: [] },
+  linkedinUrl: { type: String, default: '' },
+  careerProofDocument: { type: String, default: '' },
+  portfolioUrl: { type: String, default: '' },
+  // 컨설팅 정보
+  consultingTopics: { type: [String], default: [] },
+  availableMethod: { type: [String], default: [] },
+  selfIntroVideoUrl: { type: String, default: '' },
+  // 울림지기 승인 상태
+  approvalStatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  approvalNote: { type: String, default: '' },
 });
 
 const ConsultationSchema = new mongoose.Schema({
@@ -318,9 +350,15 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
   try {
     const {
       email, password, name, role, field, description, phone,
-      yearsOfExperience, currentCompany, languages, nationality,
+      yearsOfExperience, currentCompany, currentTitle, languages, nationality,
       companyName, companySize, planType, paymentMethod,
-      careerHistory, achievements, consultationExpertise, consultationStyle
+      careerHistory, achievements, consultationExpertise, consultationStyle,
+      careerItems: careerItemsRaw,
+      certifications: certificationsRaw,
+      education: educationRaw,
+      linkedinUrl, portfolioUrl, selfIntroVideoUrl,
+      consultingTopics: consultingTopicsRaw,
+      availableMethod: availableMethodRaw,
     } = req.body;
 
     if (!email || !password || !name) {
@@ -347,7 +385,17 @@ app.post('/api/auth/register', upload.single('profileImage'), async (req, res) =
       careerHistory: careerHistory || '',
       achievements: achievements || '',
       consultationExpertise: consultationExpertise || '',
-      consultationStyle: consultationStyle || ''
+      consultationStyle: consultationStyle || '',
+      currentTitle: currentTitle || '',
+      careerItems: careerItemsRaw ? JSON.parse(careerItemsRaw) : [],
+      certifications: certificationsRaw ? JSON.parse(certificationsRaw) : [],
+      education: educationRaw ? JSON.parse(educationRaw) : [],
+      linkedinUrl: linkedinUrl || '',
+      portfolioUrl: portfolioUrl || '',
+      selfIntroVideoUrl: selfIntroVideoUrl || '',
+      consultingTopics: consultingTopicsRaw ? JSON.parse(consultingTopicsRaw) : [],
+      availableMethod: availableMethodRaw ? JSON.parse(availableMethodRaw) : [],
+      approvalStatus: role === 'expert' ? 'pending' : 'approved',
     });
 
     // 이메일 인증 토큰 생성 (24시간 유효)
@@ -539,8 +587,76 @@ const sanitizeUsers = (list) =>
   });
 
 app.get('/api/experts', async (req, res) => {
+  try { res.json(sanitizeUsers(await User.find({ role: 'expert', approvalStatus: 'approved' }))); }
+  catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+app.get('/api/experts/:id', async (req, res) => {
+  try {
+    const expert = await User.findOne({ _id: req.params.id, role: 'expert', approvalStatus: 'approved' });
+    if (!expert) return res.status(404).json({ success: false, error: '존재하지 않는 프로필입니다.' });
+    const o = expert.toObject();
+    delete o.password;
+    delete o.careerProofDocument;
+    res.json({ success: true, expert: o });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 울림지기 프로필 완성 (2단계)
+app.patch('/api/users/:id/expert-profile', upload.fields([
+  { name: 'profileImage', maxCount: 1 },
+  { name: 'careerProofDocument', maxCount: 1 },
+]), async (req, res) => {
+  try {
+    const {
+      currentTitle, certifications: cRaw, education: eRaw,
+      linkedinUrl, portfolioUrl, selfIntroVideoUrl,
+      consultingTopics: tRaw, availableMethod: mRaw,
+      consultationExpertise, consultationStyle,
+    } = req.body;
+    const updateData = {
+      currentTitle: currentTitle || '',
+      certifications: cRaw ? JSON.parse(cRaw) : [],
+      education: eRaw ? JSON.parse(eRaw) : [],
+      linkedinUrl: linkedinUrl || '',
+      portfolioUrl: portfolioUrl || '',
+      selfIntroVideoUrl: selfIntroVideoUrl || '',
+      consultingTopics: tRaw ? JSON.parse(tRaw) : [],
+      availableMethod: mRaw ? JSON.parse(mRaw) : [],
+      consultationExpertise: consultationExpertise || '',
+      consultationStyle: consultationStyle || '',
+    };
+    if (req.files && req.files['profileImage'])
+      updateData.profileImage = `/uploads/${req.files['profileImage'][0].filename}`;
+    if (req.files && req.files['careerProofDocument'])
+      updateData.careerProofDocument = `/uploads/${req.files['careerProofDocument'][0].filename}`;
+
+    const updated = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!updated) return res.status(404).json({ success: false, error: '사용자를 찾을 수 없습니다.' });
+    const o = updated.toObject(); delete o.password;
+    res.json({ success: true, user: o });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 관리자: 울림지기 전체 목록 (승인 여부 무관)
+app.get('/api/admin/experts', async (req, res) => {
   try { res.json(sanitizeUsers(await User.find({ role: 'expert' }))); }
   catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
+// 관리자: 울림지기 승인/반려
+app.patch('/api/admin/experts/:id/status', async (req, res) => {
+  try {
+    const { approvalStatus, approvalNote } = req.body;
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { approvalStatus, approvalNote: approvalNote || '' },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ success: false, error: '사용자를 찾을 수 없습니다.' });
+    const o = updated.toObject(); delete o.password;
+    res.json({ success: true, user: o });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
 app.get('/api/users', async (req, res) => {

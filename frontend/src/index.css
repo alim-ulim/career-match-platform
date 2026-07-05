@@ -1434,3 +1434,134 @@ input, textarea, select { font-family: inherit; }
   .ulim-grid { grid-template-columns: 1fr; }
   .ulim-filter-wrap { position: static; }
 }
+
+/* ── 경력 입력 (가입 폼) ── */
+.career-item-block {
+  border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 20px; margin-bottom: 16px; background: #fafafa;
+}
+.career-item-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.career-item-num { font-weight: 700; font-size: 0.9rem; color: var(--primary); }
+.career-remove-btn {
+  background: none; border: 1px solid #e53935; color: #e53935;
+  font-size: 0.78rem; padding: 3px 10px; border-radius: 6px; cursor: pointer;
+}
+.career-remove-btn:hover { background: #fff0f0; }
+.career-add-btn {
+  width: 100%; padding: 10px; border: 1.5px dashed var(--primary); border-radius: 8px;
+  background: none; color: var(--primary); font-weight: 700; font-size: 0.9rem;
+  cursor: pointer; transition: background 0.15s;
+}
+.career-add-btn:hover { background: var(--primary-light); }
+.career-date-row { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 10px; flex-wrap: wrap; }
+.career-date-group { flex: 1; min-width: 140px; }
+.career-date-group label { display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+.career-date-sep { padding-bottom: 8px; color: #ccc; font-size: 1.2rem; }
+
+/* ── 프로필 완성도 ── */
+.approval-banner {
+  padding: 12px 16px; border-radius: 10px; font-size: 0.88rem; font-weight: 600;
+  margin-bottom: 12px;
+}
+.approval-banner.approval-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.approval-banner.approval-pending  { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.approval-banner.approval-rejected { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+
+.profile-completion-card {
+  background: #fff; border: 1.5px solid var(--border); border-radius: 14px;
+  padding: 20px; margin-bottom: 16px;
+}
+.pc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.pc-label { font-weight: 700; font-size: 0.95rem; }
+.pc-pct { font-size: 1.3rem; font-weight: 900; }
+.pc-bar-bg { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+.pc-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s; }
+.pc-cta {
+  margin-top: 14px; width: 100%; padding: 10px; border: none;
+  background: var(--primary); color: #fff; border-radius: 8px; font-weight: 700;
+  font-size: 0.9rem; cursor: pointer;
+}
+.pc-cta:hover { background: var(--primary-dark); }
+
+/* 상담 주제 태그 선택기 */
+.topic-tag-selector { display: flex; flex-wrap: wrap; gap: 8px; }
+.topic-tag-btn {
+  padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 99px;
+  background: #fff; color: var(--text-muted); font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.topic-tag-btn:hover { border-color: var(--primary); color: var(--primary); }
+.topic-tag-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* 자격증 태그 */
+.cert-tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.cert-tag {
+  background: #e0f2fe; color: #0369a1; font-size: 0.8rem; font-weight: 600;
+  padding: 3px 10px; border-radius: 99px; display: flex; align-items: center; gap: 6px;
+}
+.cert-tag button { background: none; border: none; color: #0369a1; cursor: pointer; font-size: 0.9rem; }
+
+/* 학력 입력 행 */
+.edu-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+
+/* ── 울림지기 공개 프로필 페이지 ── */
+.ep-loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; font-size: 1rem; color: var(--text-muted); }
+.ep-page { min-height: 100vh; background: #f8fafc; }
+.ep-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1a2744 60%, #0f2027 100%);
+  padding: 40px 5% 48px;
+}
+.ep-hero-inner { max-width: 800px; margin: 0 auto; }
+.ep-back {
+  background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
+  padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; margin-bottom: 24px; display: inline-block;
+}
+.ep-back:hover { background: rgba(255,255,255,0.1); }
+.ep-hero-card { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+.ep-avatar { flex-shrink: 0; }
+.ep-avatar img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(0,199,174,0.5); }
+.ep-hero-info { flex: 1; min-width: 200px; }
+.ep-hero-name { font-size: 1.6rem; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+.ep-hero-title { font-size: 1rem; color: #94a3b8; margin-bottom: 4px; }
+.ep-hero-field { font-size: 0.85rem; color: var(--primary); font-weight: 700; margin-bottom: 8px; }
+.ep-hero-desc { font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px; }
+.ep-hero-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.ep-badge { padding: 3px 12px; border-radius: 99px; font-size: 0.78rem; font-weight: 700; }
+.ep-badge-exp { background: rgba(0,199,174,0.15); color: #00c7ae; border: 1px solid rgba(0,199,174,0.3); }
+.ep-badge-method { background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); }
+.ep-linkedin { font-size: 0.82rem; color: #60a5fa; text-decoration: underline; }
+
+.ep-body { max-width: 800px; margin: 0 auto; padding: 32px 5% 60px; }
+.ep-section { background: #fff; border: 1.5px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 20px; }
+.ep-section-title { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.ep-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.ep-topic-tag { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 0.82rem; font-weight: 700; padding: 4px 14px; border-radius: 99px; }
+
+/* 경력 타임라인 */
+.ep-timeline { position: relative; padding-left: 20px; }
+.ep-timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--primary), #e5e7eb); }
+.ep-timeline-item { position: relative; margin-bottom: 28px; }
+.ep-timeline-dot { position: absolute; left: -19px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--primary); }
+.ep-timeline-body { padding-left: 8px; }
+.ep-timeline-period { font-size: 0.78rem; color: var(--text-muted); font-weight: 700; margin-bottom: 2px; }
+.ep-timeline-company { font-size: 1rem; font-weight: 800; color: var(--text); }
+.ep-timeline-position { font-size: 0.88rem; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
+.ep-timeline-resp { font-size: 0.85rem; color: #555; line-height: 1.65; margin-bottom: 6px; }
+.ep-timeline-achieve { font-size: 0.82rem; color: #059669; background: #f0fdf4; border-radius: 6px; padding: 6px 10px; }
+.ep-achieve-icon { color: var(--primary); }
+
+.ep-consult-block { }
+.ep-consult-label { font-size: 0.78rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.ep-consult-text { font-size: 0.9rem; color: #444; line-height: 1.7; white-space: pre-line; }
+
+.ep-cert-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.ep-cert-badge { background: #e0f2fe; color: #0369a1; font-size: 0.82rem; font-weight: 700; padding: 4px 12px; border-radius: 99px; }
+.ep-edu-row { font-size: 0.88rem; color: #444; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
+.ep-portfolio-link { color: var(--primary); text-decoration: underline; font-size: 0.9rem; word-break: break-all; }
+.ep-cta-wrap { text-align: center; padding-top: 12px; }
+.ep-cta { padding: 14px 40px; font-size: 1rem; border-radius: 30px; }
+
+/* 관리자: 승인 상태 배지 추가 */
+.status-pending  { background: #fff7ed; color: #c2410c; }

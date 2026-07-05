@@ -29,8 +29,10 @@ export const api = {
 
   // Users
   getExperts: () => req('GET', '/experts'),
+  getExpert: (id) => req('GET', `/experts/${id}`),
   getSeekers: () => req('GET', '/users'),
   updateUser: (id, formData) => req('PUT', `/users/${id}`, formData, true),
+  updateExpertProfile: (id, formData) => req('PATCH', `/users/${id}/expert-profile`, formData, true),
 
   // Consultations
   getConsultations: () => req('GET', '/consultations'),
@@ -57,6 +59,8 @@ export const api = {
   adminDeleteUser: (id) => adminReq('DELETE', `/admin/users/${id}`),
   adminGetConsultations: () => adminReq('GET', '/admin/consultations'),
   adminDeleteConsultation: (id) => adminReq('DELETE', `/admin/consultations/${id}`),
+  adminGetExperts: () => adminReq('GET', '/admin/experts'),
+  adminUpdateExpertStatus: (id, data) => adminReq('PATCH', `/admin/experts/${id}/status`, data),
 };
 
 const getAdminToken = () => localStorage.getItem('admin_token');

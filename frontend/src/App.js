@@ -11,6 +11,7 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Admin from './pages/Admin';
 import MatchingStatus from './pages/MatchingStatus';
+import ExpertProfile from './pages/ExpertProfile';
 import Footer from './components/Footer';
 import './index.css';
 
@@ -28,6 +29,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/ulimjigi" element={<UserList />} />
+        <Route path="/ulimjigi/:id" element={<ExpertProfile />} />
         <Route path="/referrers" element={<Navigate to="/ulimjigi" replace />} />
         <Route path="/guides" element={<Navigate to="/ulimjigi" replace />} />
         <Route path="/seekers" element={<Navigate to="/" replace />} />

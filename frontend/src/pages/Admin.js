@@ -305,6 +305,103 @@ function ConsultationsTab() {
   );
 }
 
+function ExpertApprovalTab() {
+  const [experts, setExperts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('pending');
+  const [noteId, setNoteId] = useState(null);
+  const [note, setNote] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const d = await api.adminGetExperts();
+    if (d.success) setExperts(d.users);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleStatus = async (id, status) => {
+    await api.adminUpdateExpertStatus(id, { approvalStatus: status, approvalNote: note });
+    setNoteId(null); setNote('');
+    load();
+  };
+
+  const APPROVAL_LABEL = { pending: '검토 대기', approved: '승인', rejected: '반려' };
+  const filtered = experts.filter(e => statusFilter === 'all' || e.approvalStatus === statusFilter);
+
+  return (
+    <div>
+      <div className="admin-filter-bar">
+        {['all', 'pending', 'approved', 'rejected'].map(s => (
+          <button key={s} className={`admin-tab ${statusFilter===s?'active':''}`} style={{padding:'6px 14px',fontSize:'0.82rem'}}
+            onClick={() => setStatusFilter(s)}>
+            {s === 'all' ? '전체' : APPROVAL_LABEL[s]}
+          </button>
+        ))}
+        <span className="admin-filter-count">{filtered.length}명</span>
+      </div>
+      {loading ? <div className="admin-loading">불러오는 중...</div> : filtered.length === 0 ? (
+        <p className="admin-empty">해당 상태의 울림지기가 없습니다.</p>
+      ) : (
+        <div className="admin-table-scroll">
+          <table className="admin-table">
+            <thead>
+              <tr><th>이름</th><th>이메일</th><th>분야</th><th>현직</th><th>경력</th><th>상태</th><th>관리</th></tr>
+            </thead>
+            <tbody>
+              {filtered.map(e => (
+                <React.Fragment key={e._id}>
+                  <tr>
+                    <td><strong>{e.name}</strong></td>
+                    <td style={{fontSize:'0.8rem'}}>{e.email}</td>
+                    <td>{e.field || '-'}</td>
+                    <td>{e.currentCompany}{e.currentTitle ? ` · ${e.currentTitle}` : ''}</td>
+                    <td>{e.yearsOfExperience ? `${e.yearsOfExperience}년` : '-'}</td>
+                    <td>
+                      <span className={`status-badge status-${e.approvalStatus||'pending'}`}>
+                        {APPROVAL_LABEL[e.approvalStatus||'pending']}
+                      </span>
+                    </td>
+                    <td style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                      {e.approvalStatus !== 'approved' && (
+                        <button className="admin-btn" style={{background:'#059669',color:'#fff'}}
+                          onClick={() => handleStatus(e._id, 'approved')}>승인</button>
+                      )}
+                      {e.approvalStatus !== 'rejected' && (
+                        <button className="admin-btn admin-btn-del"
+                          onClick={() => { setNoteId(e._id); setNote(''); }}>반려</button>
+                      )}
+                    </td>
+                  </tr>
+                  {noteId === e._id && (
+                    <tr>
+                      <td colSpan={7} style={{background:'#fff7ed',padding:'12px 16px'}}>
+                        <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                          <input className="admin-input" style={{flex:1}} placeholder="반려 사유 입력..." value={note} onChange={ev=>setNote(ev.target.value)} />
+                          <button className="admin-btn admin-btn-del" onClick={() => handleStatus(e._id, 'rejected')}>반려 확정</button>
+                          <button className="admin-btn" onClick={() => setNoteId(null)}>취소</button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {(e.careerItems||[]).length > 0 && (
+                    <tr>
+                      <td colSpan={7} style={{background:'#f8fafc',padding:'8px 16px',fontSize:'0.8rem',color:'#555'}}>
+                        <strong>경력:</strong> {e.careerItems.map(c => `${c.companyName} · ${c.position}${c.isCurrent?' (현재)':''}`).join(' / ')}
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StatsTab() {
   const [stats, setStats] = useState(null);
   useEffect(() => {
@@ -343,12 +440,13 @@ export default function Admin() {
         <button className="admin-logout" onClick={logout}>로그아웃</button>
       </div>
       <div className="admin-tabs">
-        {[['stats', '대시보드'], ['users', '회원 관리'], ['consultations', '상담 관리']].map(([key, label]) => (
+        {[['stats', '대시보드'], ['experts', '울림지기 승인'], ['users', '회원 관리'], ['consultations', '상담 관리']].map(([key, label]) => (
           <button key={key} className={`admin-tab ${tab === key ? 'active' : ''}`} onClick={() => setTab(key)}>{label}</button>
         ))}
       </div>
       <div className="admin-content">
         {tab === 'stats' && <StatsTab />}
+        {tab === 'experts' && <ExpertApprovalTab />}
         {tab === 'users' && <UsersTab />}
         {tab === 'consultations' && <ConsultationsTab />}
       </div>

@@ -75,20 +75,36 @@ export function Login() {
   );
 }
 
+const emptyCareer = () => ({
+  companyName: '', department: '', position: '',
+  startYear: '', startMonth: '', endYear: '', endMonth: '',
+  isCurrent: false, responsibilities: '', keyAchievements: '',
+});
+
+const YEARS = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i);
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+
+
 export function Register() {
   const [form, setForm] = useState({
     email: '', password: '', passwordConfirm: '',
     name: '', role: 'seeker', field: '', description: '',
     phone: '', companyName: '', yearsOfExperience: '', currentCompany: '',
-    gender: 'other',
-    careerHistory: '', achievements: '', consultationExpertise: '', consultationStyle: '',
+    currentTitle: '', gender: 'other',
+    consultationExpertise: '', consultationStyle: '',
   });
+  const [careerItems, setCareerItems] = useState([emptyCareer()]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const setCareer = (idx, k, val) =>
+    setCareerItems(items => items.map((it, i) => i === idx ? { ...it, [k]: val } : it));
+  const addCareer = () => setCareerItems(items => [...items, emptyCareer()]);
+  const removeCareer = (idx) => setCareerItems(items => items.filter((_, i) => i !== idx));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,6 +115,7 @@ export function Register() {
 
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => { if (k !== 'passwordConfirm') fd.append(k, v); });
+    fd.append('careerItems', JSON.stringify(careerItems));
 
     const data = await api.register(fd);
     setLoading(false);
@@ -284,50 +301,118 @@ export function Register() {
           {step === 3 && form.role === 'expert' && (
             <>
               <div className="guide-profile-notice">
-                <strong>📝 울림지기 프로필 작성 안내</strong>
-                <p>이용자가 울림지기를 선택할 때 가장 중요하게 보는 정보입니다. 구체적이고 솔직하게 작성할수록 신뢰도가 높아집니다.</p>
+                <strong>📝 울림지기 경력 등록</strong>
+                <p>이용자가 상담 신청 전 확인하는 핵심 정보입니다. 회사·직책·담당업무를 구체적으로 입력해 주세요.</p>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>현재 직책</label>
+                  <input className="form-input" placeholder="예: 경영기획팀장" value={form.currentTitle} onChange={set('currentTitle')} />
+                </div>
+                <div className="form-group">
+                  <label>총 경력 연차</label>
+                  <input className="form-input" type="number" min="0" placeholder="10" value={form.yearsOfExperience} onChange={set('yearsOfExperience')} />
+                </div>
+              </div>
+
+              {/* 경력 반복 입력 */}
+              <div className="form-group">
+                <label>경력 이력 * <span style={{fontWeight:400,color:'var(--text-muted)',fontSize:'0.8rem'}}>(최소 1건)</span></label>
+                {careerItems.map((item, idx) => (
+                  <div key={idx} className="career-item-block">
+                    <div className="career-item-header">
+                      <span className="career-item-num">경력 {idx + 1}</span>
+                      {careerItems.length > 1 && (
+                        <button type="button" className="career-remove-btn" onClick={() => removeCareer(idx)}>삭제</button>
+                      )}
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>회사명 *</label>
+                        <input className="form-input" placeholder="(주)회사명" value={item.companyName}
+                          onChange={e => setCareer(idx, 'companyName', e.target.value)} />
+                      </div>
+                      <div className="form-group">
+                        <label>부서</label>
+                        <input className="form-input" placeholder="경영기획팀" value={item.department}
+                          onChange={e => setCareer(idx, 'department', e.target.value)} />
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>직책 *</label>
+                      <input className="form-input" placeholder="팀장, 본부장, 선임 등" value={item.position}
+                        onChange={e => setCareer(idx, 'position', e.target.value)} />
+                    </div>
+                    <div className="career-date-row">
+                      <div className="career-date-group">
+                        <label>입사</label>
+                        <div style={{display:'flex',gap:6}}>
+                          <select className="form-input" value={item.startYear} onChange={e => setCareer(idx, 'startYear', e.target.value)} style={{flex:2}}>
+                            <option value="">년도</option>
+                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                          </select>
+                          <select className="form-input" value={item.startMonth} onChange={e => setCareer(idx, 'startMonth', e.target.value)} style={{flex:1}}>
+                            <option value="">월</option>
+                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="career-date-sep">—</div>
+                      <div className="career-date-group">
+                        <label>퇴사</label>
+                        {item.isCurrent ? (
+                          <div className="form-input" style={{color:'var(--primary)',fontWeight:700,background:'var(--primary-light)'}}>재직중</div>
+                        ) : (
+                          <div style={{display:'flex',gap:6}}>
+                            <select className="form-input" value={item.endYear} onChange={e => setCareer(idx, 'endYear', e.target.value)} style={{flex:2}}>
+                              <option value="">년도</option>
+                              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                            <select className="form-input" value={item.endMonth} onChange={e => setCareer(idx, 'endMonth', e.target.value)} style={{flex:1}}>
+                              <option value="">월</option>
+                              {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <label className="checkbox-label mt-8">
+                      <input type="checkbox" checked={item.isCurrent}
+                        onChange={e => setCareer(idx, 'isCurrent', e.target.checked)} />
+                      현재 재직중
+                    </label>
+                    <div className="form-group" style={{marginTop:10}}>
+                      <label>주요 담당 업무 *</label>
+                      <textarea className="form-input form-textarea"
+                        placeholder="예: 연간 예산 편성 및 정부과제 기획/운영 총괄, 팀 리빌딩 주도"
+                        value={item.responsibilities}
+                        onChange={e => setCareer(idx, 'responsibilities', e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label>주요 성과 (선택)</label>
+                      <textarea className="form-input form-textarea"
+                        placeholder="예: 비용 15% 절감, 정부지원사업 3건 선정, MAU 30만 달성"
+                        value={item.keyAchievements}
+                        onChange={e => setCareer(idx, 'keyAchievements', e.target.value)} />
+                    </div>
+                  </div>
+                ))}
+                <button type="button" className="career-add-btn" onClick={addCareer}>
+                  + 경력 추가
+                </button>
               </div>
 
               <div className="form-group">
-                <label>경력 이력 *</label>
-                <div className="form-hint">
-                  재직 기간, 기업명, 직책/역할을 시간 역순으로 작성해 주세요.<br />
-                  예) 2018~현재 | (주)카카오 | 서비스기획팀 팀장<br />
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2014~2018 | (주)네이버 | UX기획 선임
-                </div>
-                <textarea className="form-input form-textarea form-textarea-lg"
-                  placeholder={"2020~현재 | (주)OO기업 | 마케팅본부 이사\n2015~2020 | (주)XX회사 | 브랜드마케팅팀 팀장\n2010~2015 | △△에이전시 | 기획팀 대리"}
-                  value={form.careerHistory} onChange={set('careerHistory')} />
-              </div>
-
-              <div className="form-group">
-                <label>주요 성과 / 대표 프로젝트</label>
-                <div className="form-hint">
-                  숫자·결과 중심으로 작성하면 러너에게 더 큰 신뢰를 줍니다.<br />
-                  예) 신규 서비스 출시로 MAU 30만 달성 / 팀 리빌딩 후 이직률 50% 감소
-                </div>
+                <label>컨설팅 가능 분야</label>
                 <textarea className="form-input form-textarea"
-                  placeholder={"- 브랜드 리뉴얼 프로젝트 총괄, 인지도 40% 향상\n- 신사업 기획 및 투자 유치 20억 달성\n- 조직 문화 개선으로 우수인재 이탈률 감소"}
-                  value={form.achievements} onChange={set('achievements')} />
-              </div>
-
-              <div className="form-group">
-                <label>컨설팅 가능 분야 *</label>
-                <div className="form-hint">
-                  어떤 커리어 고민을 가진 분들에게 도움을 줄 수 있는지 구체적으로 작성해 주세요.
-                </div>
-                <textarea className="form-input form-textarea"
-                  placeholder={"- 마케팅/기획 직군 취업·이직 전략\n- 대기업 → 스타트업 커리어 전환 상담\n- 팀장·임원급으로의 승진 로드맵\n- 포트폴리오 및 자기소개서 방향성"}
+                  placeholder={"- 마케팅/기획 직군 취업·이직 전략\n- 대기업 → 스타트업 커리어 전환 상담\n- 팀장·임원급으로의 승진 로드맵"}
                   value={form.consultationExpertise} onChange={set('consultationExpertise')} />
               </div>
-
               <div className="form-group">
                 <label>컨설팅 스타일</label>
-                <div className="form-hint">
-                  러너가 어떤 방식으로 컨설팅이 진행될지 미리 알 수 있도록 작성해 주세요.
-                </div>
                 <textarea className="form-input form-textarea"
-                  placeholder={"러너의 이야기를 충분히 듣고 현실적인 대안을 제시합니다. 거창한 이론보다 제가 직접 경험한 사례와 실무 노하우를 중심으로 솔직하게 조언드립니다."}
+                  placeholder="어떤 방식으로 상담하는지 작성해 주세요. 예: 구체적 액션플랜 중심, 심리적 방향성 탐색 중심"
                   value={form.consultationStyle} onChange={set('consultationStyle')} />
               </div>
 

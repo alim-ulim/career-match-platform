@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import DetailModal from '../components/DetailModal';
 import Toast from '../components/Toast';
@@ -11,6 +12,7 @@ const FIELDS = ['전체', 'IT', '제조', '금융', '마케팅', '디자인', '�
 export default function UserList() {
   const { user } = useAuth();
   const { toast, showToast } = useToast();
+  const navigate = useNavigate();
 
   const [list, setList] = useState([]);
   const [consultations, setConsultations] = useState([]);
@@ -146,7 +148,7 @@ export default function UserList() {
         ) : (
           <div className="ulim-grid">
             {filtered.map(item => (
-              <div key={item._id} className="ulim-card" onClick={() => setSelected(item)}>
+              <div key={item._id} className="ulim-card" onClick={() => navigate(`/ulimjigi/${item._id}`)}>
                 {/* 상단: 아바타 + 기본 정보 */}
                 <div className="ulim-card-top">
                   <div className="ulim-card-avatar">
@@ -190,9 +192,19 @@ export default function UserList() {
                   </div>
                 )}
 
+                {/* 상담 주제 태그 (있는 경우) */}
+                {(item.consultingTopics||[]).length > 0 && (
+                  <div style={{display:'flex',gap:5,flexWrap:'wrap',marginTop:4}}>
+                    {item.consultingTopics.slice(0,3).map(t=>(
+                      <span key={t} style={{background:'#f0fdf4',color:'#166534',fontSize:'0.7rem',padding:'2px 8px',borderRadius:99,fontWeight:600}}>{t}</span>
+                    ))}
+                    {item.consultingTopics.length > 3 && <span style={{fontSize:'0.7rem',color:'#888'}}>+{item.consultingTopics.length-3}</span>}
+                  </div>
+                )}
+
                 {/* CTA */}
                 <div className="ulim-card-footer">
-                  <span className="ulim-card-cta">컨설팅 신청하기 →</span>
+                  <span className="ulim-card-cta">프로필 보기 →</span>
                 </div>
               </div>
             ))}

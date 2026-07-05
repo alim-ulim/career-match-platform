@@ -374,6 +374,41 @@ export default function MyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [resumeFile, setResumeFile] = useState(null);
+  const [isCompletingProfile, setIsCompletingProfile] = useState(false);
+  const [proofFile, setProofFile] = useState(null);
+  const [profileImg, setProfileImg] = useState(null);
+  const [completeForm, setCompleteForm] = useState({
+    currentTitle: '', linkedinUrl: '', portfolioUrl: '', selfIntroVideoUrl: '',
+    consultationExpertise: '', consultationStyle: '',
+  });
+  const [certInput, setCertInput] = useState('');
+  const [certs, setCerts] = useState([]);
+  const [eduList, setEduList] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [methods, setMethods] = useState([]);
+
+  const TOPICS = ['이직전략','직무전환','취업준비','스타트업 창업','조직관리·리더십','임원 승진','해외취업','정부과제 기획','포트폴리오 작성','자기소개서','면접 준비','연봉협상','커리어 전환','사업기획'];
+  const METHODS = ['대면', '화상', '서면'];
+
+  const calcCompletion = (u) => {
+    if (!u || u.role !== 'expert') return 0;
+    let score = 0;
+    if (u.name) score += 5;
+    if (u.profileImage) score += 10;
+    if (u.currentCompany) score += 5;
+    if (u.currentTitle) score += 5;
+    if (u.field) score += 5;
+    if (u.description) score += 5;
+    if ((u.careerItems||[]).length > 0) score += 20;
+    if (u.consultationExpertise) score += 10;
+    if (u.consultationStyle) score += 5;
+    if ((u.certifications||[]).length > 0) score += 5;
+    if ((u.education||[]).length > 0) score += 5;
+    if (u.linkedinUrl) score += 5;
+    if (u.portfolioUrl) score += 5;
+    if ((u.consultingTopics||[]).length > 0) score += 10;
+    return score;
+  };
 
   const reload = async () => {
     const d = await api.getConsultations();
@@ -440,6 +475,20 @@ export default function MyPage() {
     else showToast(data.error || '수정 실패', 'error');
   };
 
+  const handleCompleteProfile = async () => {
+    const fd = new FormData();
+    Object.entries(completeForm).forEach(([k, v]) => { if (v) fd.append(k, v); });
+    fd.append('certifications', JSON.stringify(certs));
+    fd.append('education', JSON.stringify(eduList));
+    fd.append('consultingTopics', JSON.stringify(topics));
+    fd.append('availableMethod', JSON.stringify(methods));
+    if (profileImg) fd.append('profileImage', profileImg);
+    if (proofFile) fd.append('careerProofDocument', proofFile);
+    const data = await api.updateExpertProfile(user._id, fd);
+    if (data.success) { setUser(data.user); setIsCompletingProfile(false); showToast('프로필이 업데이트되었습니다!'); }
+    else showToast(data.error || '저장 실패', 'error');
+  };
+
   return (
     <div className="page-mypage">
       <Toast toast={toast} />
@@ -461,6 +510,154 @@ export default function MyPage() {
             <button className="btn-outline" onClick={() => { logout(); navigate('/'); }}>로그아웃</button>
           </div>
         </div>
+
+        {/* 울림지기 승인 상태 배너 */}
+        {user.role === 'expert' && (
+          <div className={`approval-banner approval-${user.approvalStatus || 'pending'}`}>
+            {user.approvalStatus === 'approved' && '✅ 프로필이 승인되어 공개 중입니다.'}
+            {user.approvalStatus === 'rejected' && `❌ 프로필이 반려되었습니다. 사유: ${user.approvalNote || '관리자에게 문의하세요.'}`}
+            {(!user.approvalStatus || user.approvalStatus === 'pending') && '⏳ 프로필 검토 중입니다. 관리자 승인 후 공개됩니다.'}
+          </div>
+        )}
+
+        {/* 울림지기 프로필 완성도 */}
+        {user.role === 'expert' && (() => {
+          const pct = calcCompletion(user);
+          return (
+            <div className="profile-completion-card">
+              <div className="pc-header">
+                <span className="pc-label">프로필 완성도</span>
+                <span className="pc-pct" style={{color: pct >= 80 ? 'var(--primary)' : pct >= 50 ? '#f59e0b' : '#ef4444'}}>{pct}%</span>
+              </div>
+              <div className="pc-bar-bg"><div className="pc-bar-fill" style={{width:`${pct}%`, background: pct >= 80 ? 'var(--primary)' : pct >= 50 ? '#f59e0b' : '#ef4444'}} /></div>
+              {pct < 100 && (
+                <button className="pc-cta" onClick={() => {
+                  setCompleteForm({
+                    currentTitle: user.currentTitle || '',
+                    linkedinUrl: user.linkedinUrl || '',
+                    portfolioUrl: user.portfolioUrl || '',
+                    selfIntroVideoUrl: user.selfIntroVideoUrl || '',
+                    consultationExpertise: user.consultationExpertise || '',
+                    consultationStyle: user.consultationStyle || '',
+                  });
+                  setCerts(user.certifications || []);
+                  setEduList(user.education || []);
+                  setTopics(user.consultingTopics || []);
+                  setMethods(user.availableMethod || []);
+                  setIsCompletingProfile(true);
+                }}>
+                  프로필 완성하기 →
+                </button>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* 프로필 완성하기 폼 */}
+        {user.role === 'expert' && isCompletingProfile && (
+          <div className="edit-card">
+            <h3>프로필 완성하기</h3>
+            <p style={{color:'var(--text-muted)',fontSize:'0.85rem',marginBottom:20}}>아래 정보를 추가하면 이용자의 신뢰도가 높아집니다.</p>
+
+            <div className="form-group">
+              <label>프로필 사진</label>
+              <input type="file" accept="image/*" onChange={e => setProfileImg(e.target.files[0])} />
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>현재 직책</label>
+                <input className="form-input" placeholder="경영기획팀장" value={completeForm.currentTitle} onChange={e => setCompleteForm(f=>({...f,currentTitle:e.target.value}))} />
+              </div>
+              <div className="form-group">
+                <label>LinkedIn URL</label>
+                <input className="form-input" placeholder="https://linkedin.com/in/..." value={completeForm.linkedinUrl} onChange={e => setCompleteForm(f=>({...f,linkedinUrl:e.target.value}))} />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>포트폴리오 URL</label>
+                <input className="form-input" placeholder="개인 사이트, 브런치 등" value={completeForm.portfolioUrl} onChange={e => setCompleteForm(f=>({...f,portfolioUrl:e.target.value}))} />
+              </div>
+              <div className="form-group">
+                <label>자기소개 영상 URL</label>
+                <input className="form-input" placeholder="YouTube 링크 등 (선택)" value={completeForm.selfIntroVideoUrl} onChange={e => setCompleteForm(f=>({...f,selfIntroVideoUrl:e.target.value}))} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>상담 가능 주제 <span style={{fontWeight:400,color:'var(--text-muted)',fontSize:'0.8rem'}}>(복수 선택)</span></label>
+              <div className="topic-tag-selector">
+                {TOPICS.map(t => (
+                  <button type="button" key={t}
+                    className={`topic-tag-btn ${topics.includes(t)?'active':''}`}
+                    onClick={() => setTopics(ts => ts.includes(t) ? ts.filter(x=>x!==t) : [...ts,t])}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>상담 방식</label>
+              <div style={{display:'flex',gap:10}}>
+                {METHODS.map(m => (
+                  <label key={m} style={{display:'flex',alignItems:'center',gap:6,cursor:'pointer'}}>
+                    <input type="checkbox" checked={methods.includes(m)} onChange={e => setMethods(ms => e.target.checked ? [...ms,m] : ms.filter(x=>x!==m))} />
+                    {m}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>자격증 / 인증</label>
+              <div style={{display:'flex',gap:8}}>
+                <input className="form-input" placeholder="자격증명 입력 후 추가" value={certInput} onChange={e=>setCertInput(e.target.value)}
+                  onKeyDown={e => { if(e.key==='Enter'){e.preventDefault(); if(certInput.trim()){setCerts(c=>[...c,certInput.trim()]);setCertInput('');}}}} />
+                <button type="button" className="btn-outline" style={{whiteSpace:'nowrap'}} onClick={() => {if(certInput.trim()){setCerts(c=>[...c,certInput.trim()]);setCertInput('');}}}>추가</button>
+              </div>
+              <div className="cert-tag-list">
+                {certs.map((c,i) => (
+                  <span key={i} className="cert-tag">{c} <button type="button" onClick={()=>setCerts(cs=>cs.filter((_,idx)=>idx!==i))}>×</button></span>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>학력</label>
+              {eduList.map((ed, i) => (
+                <div key={i} className="edu-row">
+                  <input className="form-input" placeholder="학교명" value={ed.school} style={{flex:2}} onChange={e=>setEduList(l=>l.map((x,idx)=>idx===i?{...x,school:e.target.value}:x))} />
+                  <input className="form-input" placeholder="전공" value={ed.major} style={{flex:2}} onChange={e=>setEduList(l=>l.map((x,idx)=>idx===i?{...x,major:e.target.value}:x))} />
+                  <select className="form-input" value={ed.degree} style={{flex:1}} onChange={e=>setEduList(l=>l.map((x,idx)=>idx===i?{...x,degree:e.target.value}:x))}>
+                    {['학사','석사','박사','기타'].map(d=><option key={d} value={d}>{d}</option>)}
+                  </select>
+                  <input className="form-input" placeholder="졸업년도" type="number" value={ed.graduationYear} style={{flex:1}} onChange={e=>setEduList(l=>l.map((x,idx)=>idx===i?{...x,graduationYear:e.target.value}:x))} />
+                  <button type="button" className="career-remove-btn" onClick={()=>setEduList(l=>l.filter((_,idx)=>idx!==i))}>삭제</button>
+                </div>
+              ))}
+              <button type="button" className="career-add-btn" style={{marginTop:8}} onClick={()=>setEduList(l=>[...l,{school:'',major:'',degree:'학사',graduationYear:''}])}>+ 학력 추가</button>
+            </div>
+
+            <div className="form-group">
+              <label>컨설팅 가능 분야</label>
+              <textarea className="form-input form-textarea" value={completeForm.consultationExpertise} onChange={e=>setCompleteForm(f=>({...f,consultationExpertise:e.target.value}))} placeholder="어떤 커리어 고민에 도움 드릴 수 있는지 구체적으로 작성해 주세요." />
+            </div>
+            <div className="form-group">
+              <label>컨설팅 스타일</label>
+              <textarea className="form-input form-textarea" value={completeForm.consultationStyle} onChange={e=>setCompleteForm(f=>({...f,consultationStyle:e.target.value}))} placeholder="어떤 방식으로 상담하는지 작성해 주세요." />
+            </div>
+            <div className="form-group">
+              <label>경력증명서 / 재직증명서 <span style={{fontWeight:400,color:'var(--text-muted)',fontSize:'0.8rem'}}>(관리자 검토용, 공개 안 됨)</span></label>
+              <input type="file" accept=".pdf,.doc,.docx,.jpg,.png" onChange={e=>setProofFile(e.target.files[0])} />
+            </div>
+
+            <div className="row-gap mt-16">
+              <button className="btn-outline flex-1" onClick={()=>setIsCompletingProfile(false)}>취소</button>
+              <button className="btn-primary flex-2" onClick={handleCompleteProfile}>저장하기</button>
+            </div>
+          </div>
+        )}
 
         {/* 울림지기 상세 경력 */}
         {user.role === 'expert' && (user.careerHistory || user.consultationExpertise) && (
