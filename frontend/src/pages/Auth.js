@@ -90,8 +90,6 @@ export function Register() {
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
-  const totalSteps = form.role === 'expert' ? 3 : 2;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.passwordConfirm) { setError('비밀번호가 일치하지 않습니다.'); return; }
