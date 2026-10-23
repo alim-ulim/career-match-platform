@@ -1,7 +1,7 @@
 FROM node:24-alpine
 RUN apk add --no-cache su-exec
 WORKDIR /app
-COPY --chown=node:node package.json server.mjs platform.mjs ./
+COPY --chown=node:node package.json server.mjs platform.mjs backup.mjs ./
 COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node public ./public
 COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/ulim-entrypoint

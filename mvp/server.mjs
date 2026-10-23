@@ -1,5 +1,7 @@
 import http from 'node:http';
 import {platform} from './platform.mjs';
+import {privateSnapshot} from './backup.mjs';
+import {pipeline} from 'node:stream/promises';
 import {DatabaseSync} from 'node:sqlite';
 import {randomBytes,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import fs from 'node:fs';
@@ -62,6 +64,13 @@ export function createApp({dbPath=':memory:',adminPassword,production=false,publ
    }
    if(route.startsWith('/api/admin/')){
     const s=session(req);if(!s)return send(res,401,{error:'관리자 로그인이 필요합니다.'});if(write&&req.headers['x-csrf-token']!==s.csrf)return send(res,403,{error:'인증 확인이 필요합니다. 다시 로그인해주세요.'});
+    if(route==='/api/admin/backup'&&req.method==='POST'){
+     const b=await body(req);if(b.confirmation!=='download-private-backup')return send(res,400,{error:'개인정보 포함 백업 다운로드 확인이 필요합니다.'});
+     if(!limit('backup:'+s.token,2,600000)||!limit('backup-global',4,600000))return send(res,429,{error:'백업 요청이 많습니다. 10분 후 다시 시도해주세요.'});
+     const snapshot=privateSnapshot(db);
+     try{const name='ulim-backup-'+new Date().toISOString().replace(/[:.]/g,'-')+'.sqlite';res.writeHead(200,{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename="${name}"`,'Content-Length':fs.statSync(snapshot.file).size});await pipeline(fs.createReadStream(snapshot.file),res);}finally{snapshot.cleanup()}
+     return;
+    }
     if(route==='/api/admin/session'&&req.method==='GET')return send(res,200,{csrf:s.csrf});
     if(route==='/api/admin/logout'&&req.method==='POST'){db.prepare('DELETE FROM sessions WHERE token=?').run(s.token);cookie(res,'',0);return send(res,200,{ok:true});}
     if(route==='/api/admin/inquiries'&&req.method==='GET')return send(res,200,{items:db.prepare('SELECT * FROM inquiries ORDER BY created_at DESC').all().map(row)});
@@ -79,8 +88,8 @@ export function createApp({dbPath=':memory:',adminPassword,production=false,publ
    if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'허용하지 않는 요청입니다.'});
    if(route==='/fonts/PretendardVariable.woff2'){const data=fs.readFileSync(path.join(root,'public/fonts/PretendardVariable.woff2'));res.writeHead(200,{'Content-Type':'font/woff2'});return res.end(req.method==='HEAD'?undefined:data);}
    if(route==='/app.js'||route==='/platform.css'){const data=fs.readFileSync(path.join(root,'public',route.slice(1)));res.writeHead(200,{'Content-Type':route.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8'});return res.end(data);}
-   const pages={'/':'index.html','/index.html':'index.html','/admin':'admin.html','/admin.html':'admin.html','/privacy':'privacy.html','/terms':'terms.html','/contact':'contact.html','/join':'account.html','/login':'account.html','/experts':'experts.html','/expert':'expert.html','/expert/register':'expert-register.html','/my':'my.html','/admin/platform':'admin-platform.html'};const file=pages[route];if(!file)return send(res,404,{error:'페이지를 찾을 수 없습니다.'});const data=fs.readFileSync(path.join(root,'public',file));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(req.method==='HEAD'?undefined:data);
-  }catch(e){send(res,e.status||500,{error:e.status?e.message:'처리를 완료하지 못했습니다. 잠시 후 다시 시도해주세요.'});}
+   const pages={'/':'index.html','/index.html':'index.html','/admin':'admin.html','/admin.html':'admin.html','/privacy':'privacy.html','/terms':'terms.html','/contact':'contact.html','/join':'account.html','/login':'account.html','/experts':'experts.html','/expert':'expert.html','/expert/register':'expert-register.html','/my':'my.html','/admin/platform':'admin-platform.html','/admin/backup':'backup.html'};const file=pages[route];if(!file)return send(res,404,{error:'페이지를 찾을 수 없습니다.'});const data=fs.readFileSync(path.join(root,'public',file));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(req.method==='HEAD'?undefined:data);
+  }catch(e){if(res.headersSent){res.destroy();return}send(res,e.status||500,{error:e.status?e.message:'처리를 완료하지 못했습니다. 잠시 후 다시 시도해주세요.'});}
  });const cleanupTimer=setInterval(()=>{try{cleanup()}catch{console.error('보관 기간 정리 실패: 저장소 상태 확인 필요')}},3600000);cleanupTimer.unref();server.on('close',()=>clearInterval(cleanupTimer));return {server,db,close:()=>new Promise(resolve=>server.close(()=>{db.close();resolve()}))};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
