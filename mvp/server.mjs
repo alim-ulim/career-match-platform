@@ -49,7 +49,7 @@ export function createApp({dbPath=':memory:',adminPassword,production=false,publ
     if(!definitions[b.type])return send(res,400,{error:'문의 유형을 선택해주세요.'});
     const trim=x=>typeof x==='string'?x.trim():'';const name=trim(b.name),email=trim(b.email);
     if(!name||name.length>80||email.length>254||!/^\S+@\S+\.\S+$/.test(email))return send(res,400,{error:'이름과 올바른 이메일을 확인해주세요.'});
-    if(b.consent!==true||b.consentVersion!=='2026-10-21-v1')return send(res,400,{error:'문의 처리 개인정보 안내를 확인하고 동의해주세요.'});
+    if(b.consent!==true||b.consentVersion!=='2026-10-23-v2'||b.overseasConsent!==true)return send(res,400,{error:'문의 처리 개인정보 안내를 확인하고 동의해주세요.'});
     const payload={};for(const k of allowed[b.type]){const value=trim(b.payload?.[k]);if(value.length>1000)return send(res,400,{error:'입력 항목은 각각 1,000자 이내로 작성해주세요.'});payload[k]=value;}
     if(definitions[b.type].some(k=>!payload[k]))return send(res,400,{error:'필수 항목을 입력해주세요.'});
     const key=req.headers['idempotency-key'];if(typeof key!=='string'||!/^[a-zA-Z0-9-]{16,80}$/.test(key))return send(res,400,{error:'접수 확인 키가 필요합니다. 페이지를 새로 열어주세요.'});
