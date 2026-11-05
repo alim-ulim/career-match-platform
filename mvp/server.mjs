@@ -1,5 +1,6 @@
 import http from 'node:http';
 import {platform} from './platform.mjs';
+import {createResumeDraftService} from './resume-draft.mjs';
 import {privateSnapshot} from './backup.mjs';
 import {pipeline} from 'node:stream/promises';
 import {DatabaseSync} from 'node:sqlite';
@@ -13,7 +14,7 @@ const id=()=>randomBytes(24).toString('hex');
 const statuses=['접수','검토 중','추가 확인 필요','조건 안내 준비','종료'];
 const definitions={customer:['role','topic','question'],expert:['field','experience','topics','method'],company:['company','position','responsibility']};
 const allowed={customer:['role','topic','question','attempt','timing'],expert:['field','experience','topics','method','availability'],company:['company','position','responsibility','difficulty','deadline']};
-export function createApp({dbPath=':memory:',adminPassword,production=false,publicOrigin,secureCookie=production}={}){
+export function createApp({dbPath=':memory:',adminPassword,production=false,publicOrigin,secureCookie=production,resumeDraftService=createResumeDraftService()}={}){
  if(!adminPassword||adminPassword.length<12)throw Error('관리자 비밀번호는 12자 이상이어야 합니다.');
  if(production&&!publicOrigin)throw Error('운영 환경 PUBLIC_ORIGIN은 HTTPS 주소여야 합니다.');
  if(publicOrigin){let origin;try{origin=new URL(publicOrigin)}catch{throw Error('PUBLIC_ORIGIN 주소를 확인해주세요.')}
@@ -33,7 +34,7 @@ export function createApp({dbPath=':memory:',adminPassword,production=false,publ
  function session(req){const cookie=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('ulim_session='));if(!cookie)return null;const value=cookie.slice(13);const s=db.prepare('SELECT * FROM sessions WHERE token=? AND expires>?').get(hash(value),Date.now());return s||null;}
  function cookie(res,value,maxAge){res.setHeader('Set-Cookie',`ulim_session=${value}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${maxAge}${secureCookie?'; Secure':''}`);}
  function row(r){return {...r,payload:JSON.parse(r.payload),checks:JSON.parse(r.checks),history:db.prepare('SELECT at,action FROM events WHERE inquiry_id=? ORDER BY id DESC').all(r.id)}}
- const platformRoute=platform({db,body,send,adminSession:session,limit,secureCookie});
+ const platformRoute=platform({db,body,send,adminSession:session,limit,secureCookie,resumeDraftService});
  const server=http.createServer(async(req,res)=>{
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');res.setHeader('Cache-Control','no-store');
   res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
@@ -87,8 +88,8 @@ export function createApp({dbPath=':memory:',adminPassword,production=false,publ
    if(route.startsWith('/api/'))return send(res,404,{error:'요청 경로가 없습니다.'});
    if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'허용하지 않는 요청입니다.'});
    if(route==='/fonts/PretendardVariable.woff2'){const data=fs.readFileSync(path.join(root,'public/fonts/PretendardVariable.woff2'));res.writeHead(200,{'Content-Type':'font/woff2'});return res.end(req.method==='HEAD'?undefined:data);}
-   if(route==='/app.js'||route==='/platform.css'){const data=fs.readFileSync(path.join(root,'public',route.slice(1)));res.writeHead(200,{'Content-Type':route.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8'});return res.end(data);}
-   const pages={'/':'index.html','/index.html':'index.html','/admin':'admin.html','/admin.html':'admin.html','/privacy':'privacy.html','/terms':'terms.html','/contact':'contact.html','/join':'account.html','/login':'account.html','/experts':'experts.html','/expert':'expert.html','/expert/register':'expert-register.html','/my':'my.html','/admin/platform':'admin-platform.html','/admin/backup':'backup.html'};const file=pages[route];if(!file)return send(res,404,{error:'페이지를 찾을 수 없습니다.'});const data=fs.readFileSync(path.join(root,'public',file));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(req.method==='HEAD'?undefined:data);
+   if(route==='/app.js'||route==='/resume-draft.js'||route==='/expert-intake.js'||route==='/platform.css'){const data=fs.readFileSync(path.join(root,'public',route.slice(1)));res.writeHead(200,{'Content-Type':route.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8'});return res.end(data);}
+   const pages={'/':'index.html','/index.html':'index.html','/admin':'admin.html','/admin.html':'admin.html','/privacy':'privacy.html','/terms':'terms.html','/contact':'contact.html','/join':'account.html','/login':'account.html','/experts':'experts.html','/expert':'expert.html','/expert/register':'expert-register.html','/my':'my.html','/admin/platform':'admin-platform.html','/admin/intakes':'admin-intakes.html','/admin/backup':'backup.html'};const file=pages[route];if(!file)return send(res,404,{error:'페이지를 찾을 수 없습니다.'});const data=fs.readFileSync(path.join(root,'public',file));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(req.method==='HEAD'?undefined:data);
   }catch(e){if(res.headersSent){res.destroy();return}send(res,e.status||500,{error:e.status?e.message:'처리를 완료하지 못했습니다. 잠시 후 다시 시도해주세요.'});}
  });const cleanupTimer=setInterval(()=>{try{cleanup()}catch{console.error('보관 기간 정리 실패: 저장소 상태 확인 필요')}},3600000);cleanupTimer.unref();server.on('close',()=>clearInterval(cleanupTimer));return {server,db,close:()=>new Promise(resolve=>server.close(()=>{db.close();resolve()}))};
 }
